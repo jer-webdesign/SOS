@@ -71,7 +71,7 @@
       background:#a7ddff;
       border-radius: 8px 8px 0 0;
       font-weight: bold;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
     }
 
     .header-item, .header-quantity {
@@ -83,6 +83,33 @@
       overflow-y: auto;
       border: 2px solid #97ccff;
       border-radius: 0 0 8px 8px;
+    }
+
+    /* Senior-friendly scrollbar styling */
+    .table-body::-webkit-scrollbar {
+      width: 50px; /* Increased from default ~12px for senior accessibility */
+    }
+
+    .table-body::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+      border: 2px solid #e0e0e0;
+    }
+
+    .table-body::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #2E5C8A, #4A7BB0);
+      border-radius: 10px;
+      border: 2px solid #f1f1f1;
+      min-height: 40px; /* Ensure thumb is large enough to grab */
+    }
+
+    .table-body::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #1A4A73, #2E5C8A);
+      cursor: pointer;
+    }
+
+    .table-body::-webkit-scrollbar-thumb:active {
+      background: linear-gradient(135deg, #0F3A5F, #1A4A73);
     }
 
     .table-row {
@@ -99,7 +126,7 @@
     }
 
     .item-name {
-      font-size: 1.1rem;
+      font-size: 1.4rem;
       font-weight: 500;
     }
 
@@ -167,6 +194,33 @@
       width: 90%;
       max-height: 80vh;
       overflow-y: auto;
+    }
+
+    /* Senior-friendly scrollbar for cart summary */
+    .cart-summary-content::-webkit-scrollbar {
+      width: 20px; /* Increased from default for senior accessibility */
+    }
+
+    .cart-summary-content::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+      border: 2px solid #e0e0e0;
+    }
+
+    .cart-summary-content::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #2E5C8A, #4A7BB0);
+      border-radius: 10px;
+      border: 2px solid #f1f1f1;
+      min-height: 40px;
+    }
+
+    .cart-summary-content::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #1A4A73, #2E5C8A);
+      cursor: pointer;
+    }
+
+    .cart-summary-content::-webkit-scrollbar-thumb:active {
+      background: linear-gradient(135deg, #0F3A5F, #1A4A73);
     }
 
     .cart-header {
@@ -469,6 +523,10 @@
         <span class="material-icons assist-btn-icon">eco</span>
         Vegetables
       </button>
+      <button class="add-btn" onclick="startAddItem('Personal Care')">
+        <span class="material-icons assist-btn-icon">health_and_safety</span>
+        Personal Care
+      </button>
     </div>
 
     <!-- <div class="cards" id="cards"></div> -->
@@ -526,7 +584,29 @@
       'Bread': ['White Bread', 'Whole Wheat Bread', 'Sourdough', 'Bagels', 'Croissants'],
       'Eggs': ['Large Eggs', 'Medium Eggs', 'Free-Range Eggs', 'Organic Eggs', 'Duck Eggs'],
       'Painkillers': ['Aspirin', 'Ibuprofen', 'Acetaminophen', 'Naproxen', 'Topical Pain Relief'],
-      'Vegetables': ['Carrots', 'Broccoli', 'Spinach', 'Tomatoes', 'Onions', 'Potatoes', 'Bell Peppers']
+      'Vegetables': [
+        // Leafy Greens
+        'Spinach', 'Lettuce', 'Kale', 'Arugula', 'Swiss Chard', 'Collard Greens',
+        // Root Vegetables
+        'Carrots', 'Potatoes', 'Sweet Potatoes', 'Beets', 'Turnips', 'Radishes',
+        // Other Common Vegetables
+        'Broccoli', 'Cauliflower', 'Brussels Sprouts', 'Cabbage', 'Green Beans',
+        'Asparagus', 'Celery', 'Cucumbers', 'Zucchini', 'Yellow Squash',
+        'Tomatoes', 'Bell Peppers', 'Onions', 'Garlic', 'Mushrooms',
+        'Corn', 'Peas', 'Avocados', 'Eggplant', 'Okra'
+      ],
+      'Personal Care': [
+        // Health Monitoring
+        'Blood Pressure Monitor', 'Thermometer', 'Blood Glucose Test Strips', 'Pulse Oximeter',
+        // Hygiene & Bathing
+        'Body Wash', 'Shampoo', 'Conditioner', 'Soap', 'Toothpaste', 'Toothbrush', 'Mouthwash',
+        // Personal Items
+        'Adult Diapers', 'Tissues', 'Toilet Paper', 'Hand Sanitizer', 'Lotion', 'Sunscreen',
+        // Mobility & Safety
+        'Compression Socks', 'Heating Pad', 'Ice Packs', 'First Aid Kit', 'Reading Glasses',
+        // Daily Living
+        'Vitamins', 'Denture Cream', 'Eye Drops', 'Cotton Swabs', 'Bandages'
+      ]
     };
 
     function startAddItem(category) {
@@ -848,22 +928,7 @@
     }
 
     function confirmCartOrder() {
-      // Add all cart items as cards to the main view
-      const dateItems = cartItems[selectedDate] || {};
-      
-      Object.entries(dateItems).forEach(([category, items]) => {
-        const card = document.createElement("div");
-        card.className = "card";
-        
-        const itemsList = items.map(({item, qty}) => `${item} (x${qty})`).join(', ');
-        card.innerHTML = `
-          <span>${category}: ${itemsList} — ${selectedDate}</span>
-          <button class="remove-btn" onclick="removeCardAndCartItem(this, '${selectedDate}', '${category}')">Remove</button>
-        `;
-        
-        document.getElementById("cards").appendChild(card);
-      });
-      
+      // Close cart summary and go directly to confirmation
       closeCartSummary();
       
       // Show confirmation modal
