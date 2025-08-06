@@ -449,6 +449,58 @@
     </div>
   </div>
 
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" id="deleteConfirmModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeDeleteConfirmModal()">✖</button>
+      <h3 style="color: #dc2626; font-size: 2.4rem; margin-bottom: 40px; text-align: center; font-weight: 700;">Remove Contact?</h3>
+      <div style="padding: 20px 0; text-align: center;">
+        <div style="margin-bottom: 40px;">
+          <span class="material-icons" style="font-size: 4rem; color: #dc2626; margin-bottom: 20px;">warning</span>
+        </div>
+        <p style="font-size: 1.8rem; color: #2E5C8A; margin-bottom: 30px; line-height: 1.6; font-weight: 600;">
+          Are you sure you want to remove
+        </p>
+        <p style="font-size: 2.2rem; color: #dc2626; margin-bottom: 50px; line-height: 1.4; font-weight: 700;">
+          "<span id="deleteContactName"></span>"?
+        </p>
+        <p style="font-size: 1.4rem; color: #6b7280; margin-bottom: 50px; line-height: 1.5; font-weight: 500;">
+          This action cannot be undone.
+        </p>
+        <div style="display: flex; gap: 20px; justify-content: center;">
+          <button onclick="confirmDeleteContact()" style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: none; padding: 25px 40px; border-radius: 25px; font-size: 1.5rem; font-weight: 700; cursor: pointer; min-width: 160px; box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4); transition: all 0.3s ease; text-transform: uppercase;">
+            <span class="material-icons" style="margin-right: 8px; font-size: 1.2rem;">delete</span>
+            Yes, Remove
+          </button>
+          <button onclick="closeDeleteConfirmModal()" style="background: linear-gradient(135deg, #6b7280, #9ca3af); color: white; border: none; padding: 25px 40px; border-radius: 25px; font-size: 1.5rem; font-weight: 700; cursor: pointer; min-width: 160px; box-shadow: 0 6px 15px rgba(107, 114, 128, 0.4); transition: all 0.3s ease; text-transform: uppercase;">
+            <span class="material-icons" style="margin-right: 8px; font-size: 1.2rem;">cancel</span>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Validation Error Modal -->
+  <div class="modal" id="validationErrorModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeValidationErrorModal()">✖</button>
+      <h3 style="color: #dc2626; font-size: 2.4rem; margin-bottom: 40px; text-align: center; font-weight: 700;">Missing Information</h3>
+      <div style="padding: 20px 0; text-align: center;">
+        <div style="margin-bottom: 40px;">
+          <span class="material-icons" style="font-size: 4rem; color: #dc2626; margin-bottom: 20px;">error</span>
+        </div>
+        <p id="validationErrorMessage" style="font-size: 1.8rem; color: #2E5C8A; margin-bottom: 50px; line-height: 1.6; font-weight: 600;">
+          Please enter the required information.
+        </p>
+        <button onclick="closeValidationErrorModal()" style="background: linear-gradient(135deg, #2E5C8A, #4A7BB0); color: white; border: none; padding: 25px 50px; border-radius: 25px; font-size: 1.5rem; font-weight: 700; cursor: pointer; min-width: 180px; box-shadow: 0 6px 15px rgba(46, 92, 138, 0.4); transition: all 0.3s ease; text-transform: uppercase;">
+          <span class="material-icons" style="margin-right: 8px; font-size: 1.2rem;">check</span>
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let currentText = "";
     let selectedDate = "";
@@ -596,16 +648,12 @@
 
     // Individual delete functionality for custom contacts
     function deleteCustomContact(contactName, buttonElement) {
-      if (confirm(`Are you sure you want to remove ${contactName}?`)) {
-        // Remove from localStorage
-        removeContactFromStorage(contactName);
-        
-        // Remove button from DOM
-        buttonElement.remove();
-        
-        // Update layout
-        updateButtonLayout();
-      }
+      // Store contact info for deletion
+      window.pendingDeleteContact = { name: contactName, element: buttonElement };
+      
+      // Show custom delete confirmation modal
+      document.getElementById('deleteContactName').textContent = contactName;
+      document.getElementById('deleteConfirmModal').style.display = 'flex';
     }
 
     function removeContactFromStorage(contactName) {
@@ -641,6 +689,50 @@
       document.getElementById('successModal').style.display = 'none';
     }
 
+    function closeDeleteConfirmModal() {
+      document.getElementById('deleteConfirmModal').style.display = 'none';
+      // Clear pending delete data
+      window.pendingDeleteContact = null;
+    }
+
+    function closeValidationErrorModal() {
+      document.getElementById('validationErrorModal').style.display = 'none';
+      // Return focus to the appropriate input field
+      if (window.validationErrorField) {
+        setTimeout(() => {
+          document.getElementById(window.validationErrorField).focus();
+          window.validationErrorField = null;
+        }, 100);
+      }
+    }
+
+    function showValidationError(message, fieldId) {
+      window.validationErrorField = fieldId;
+      document.getElementById('validationErrorMessage').textContent = message;
+      document.getElementById('validationErrorModal').style.display = 'flex';
+    }
+
+    function confirmDeleteContact() {
+      if (window.pendingDeleteContact) {
+        const { name, element } = window.pendingDeleteContact;
+        
+        // Remove from localStorage
+        removeContactFromStorage(name);
+        
+        // Remove button from DOM
+        element.remove();
+        
+        // Update layout
+        updateButtonLayout();
+        
+        // Clear pending delete data
+        window.pendingDeleteContact = null;
+      }
+      
+      // Close modal
+      document.getElementById('deleteConfirmModal').style.display = 'none';
+    }
+
     function addNewContact() {
       // Check current number of custom contacts
       const customButtons = document.querySelectorAll('.buttons-call .add-btn.custom-contact');
@@ -655,14 +747,12 @@
       
       // Validate inputs
       if (!name) {
-        alert('Please enter a name for your contact.');
-        document.getElementById('contactName').focus();
+        showValidationError('Please enter a name for your contact.', 'contactName');
         return;
       }
       
       if (!phone) {
-        alert('Please enter a phone number for your contact.');
-        document.getElementById('contactPhone').focus();
+        showValidationError('Please enter a phone number for your contact.', 'contactPhone');
         return;
       }
       
