@@ -41,6 +41,11 @@ function emergency911() {
   document.getElementById('emergencyModal').style.display = 'flex';
 }
 
+function closeScheduleSentModal() {
+  document.getElementById("scheduleSentModal").style.display = "none";
+  // Optionally reset any scheduling state here if needed
+}
+
 function confirmEmergency() {
   // Close the confirmation modal
   document.getElementById('emergencyModal').style.display = 'none';

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -207,7 +206,7 @@
         Schedule doctor
       </button>
     </div>
-    <div class="cards" id="cards"></div>
+    <!-- <div class="cards" id="cards"></div> -->
     
   </div>
 
@@ -223,6 +222,7 @@
     Add Visit
   </button>
 
+  <!-- Calendar Modal -->
   <div class="modal" id="calendarModal" style="display:none">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal('calendarModal')">✖</button>
@@ -240,6 +240,7 @@
     </div>
   </div>
 
+  <!-- Time Modal -->
   <div class="modal" id="timeModal" style="display:none">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal('timeModal')">✖</button>
@@ -299,6 +300,24 @@
     </div>
   </div>
 
+  <!-- Schedule Sent Modal -->
+  <div class="modal" id="scheduleSentModal" style="display:none">
+    <div class="modal-content" style="text-align:center;">
+      <button class="close-btn" onclick="closeScheduleSentModal()">✖</button>
+      <h3 style="color:#2E5C8A; font-size:2.2rem; margin-bottom:30px; font-weight:700;">
+        Schedule Sent!
+      </h3>
+      <div style="padding:20px 0;">
+        <span class="material-icons" style="font-size:4rem; color:#4A7BB0; margin-bottom:20px;">cloud_done</span>
+        <p style="font-size:1.5rem; color:#2E5C8A; margin-bottom:30px;">
+          Your request has been sent to the SOS cloud platform.<br>
+          Our team will follow up with you soon.
+        </p>
+        <button onclick="closeScheduleSentModal()" class="modal-btn-primary">OK</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let currentText = "";
     let selectedDate = "";
@@ -313,8 +332,17 @@
       const m = String(month).padStart(2, '0');
       const d = String(day).padStart(2, '0');
       selectedDate = `${year}-${m}-${d}`;
+
+      // Format for display: "Month Day, Year"
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+      const monthName = monthNames[month - 1];
+      const formattedDate = `${monthName} ${day}, ${year}`;
+
       document.getElementById("calendarModal").style.display = "none";
-      document.getElementById("selectedDateDisplay").textContent = selectedDate;
+      document.getElementById("selectedDateDisplay").textContent = formattedDate;
       showTimeModal();
     }
 
@@ -323,12 +351,25 @@
       container.innerHTML = "";
       for (let h = 8; h <= 18; h++) {
         for (let m of [0, 30]) {
-          const hour = String(h).padStart(2, '0');
+          // 12-hour format with AM/PM
+          let displayHour = h;
+          let ampm = "AM";
+          if (h === 0) {
+            displayHour = 12;
+            ampm = "AM";
+          } else if (h === 12) {
+            displayHour = 12;
+            ampm = "PM";
+          } else if (h > 12) {
+            displayHour = h - 12;
+            ampm = "PM";
+          }
           const min = String(m).padStart(2, '0');
+          const displayTime = `${displayHour}:${min} ${ampm}`;
           const btn = document.createElement("button");
           btn.className = "time-button";
-          btn.textContent = `${hour}:${min}`;
-          btn.onclick = () => confirmTime(`${hour}:${min}`);
+          btn.textContent = displayTime;
+          btn.onclick = () => confirmTime(displayTime);
           container.appendChild(btn);
         }
       }
@@ -338,26 +379,26 @@
     function confirmTime(time) {
       const fullText = `${currentText} — ${selectedDate} at ${time}`;
 
-      const card = document.createElement("div");
-      card.className = "card";
+      // Send to SOS cloud platform (replace this with your actual API call)
+      sendScheduleToSOS(fullText);
 
-      const span = document.createElement("span");
-      span.textContent = fullText;
+      // Show the modal
+      document.getElementById("scheduleSentModal").style.display = "flex";
 
-      const btn = document.createElement("button");
-      btn.className = "remove-btn";
-      btn.textContent = "Remove";
-      btn.onclick = () => {
-        card.remove();
-        saveItems();
-      };
-
-      card.appendChild(span);
-      card.appendChild(btn);
-      document.getElementById("cards").appendChild(card);
-
+      // Hide the time modal
       document.getElementById("timeModal").style.display = "none";
-      saveItems();
+    }
+
+    // Example function to send data to backend (replace with your actual implementation)
+    function sendScheduleToSOS(scheduleText) {
+      // Example: Use fetch or AJAX to send to your backend
+      // fetch('https://your-sos-api/schedule', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ schedule: scheduleText })
+      // });
+      // For now, just log to console
+      console.log("Sent to SOS cloud platform:", scheduleText);
     }
 
     function closeModal(id) {
@@ -477,6 +518,10 @@
 
     function closeSuccessModal() {
       document.getElementById('successModal').style.display = 'none';
+    }
+
+    function closeScheduleSentModal() {
+      document.getElementById('scheduleSentModal').style.display = 'none';
     }
 
     function deleteCustomVisit(visitName, buttonElement) {

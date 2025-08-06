@@ -373,6 +373,24 @@
     </div>
   </div>
 
+  <!-- Schedule Sent Modal -->
+  <div class="modal" id="scheduleSentModal" style="display:none">
+    <div class="modal-content" style="text-align:center;">
+      <button class="close-btn" onclick="closeScheduleSentModal()">✖</button>
+      <h3 style="color:#2E5C8A; font-size:2.2rem; margin-bottom:30px; font-weight:700;">
+        Schedule Sent!
+      </h3>
+      <div style="padding:20px 0;">
+        <span class="material-icons" style="font-size:4rem; color:#4A7BB0; margin-bottom:20px;">cloud_done</span>
+        <p style="font-size:1.5rem; color:#2E5C8A; margin-bottom:30px;">
+          Your request has been sent to the SOS cloud platform.<br>
+          Our team will follow up with you soon.
+        </p>
+        <button onclick="closeScheduleSentModal()" class="modal-btn-primary">OK</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let currentText = "";
     let selectedDate = "";
@@ -488,26 +506,26 @@
     function confirmTime(time) {
       const fullText = `${currentText} — ${selectedDate} at ${time}`;
 
-      const card = document.createElement("div");
-      card.className = "card";
+      // Send to SOS cloud platform (replace this with your actual API call)
+      sendScheduleToSOS(fullText);
 
-      const span = document.createElement("span");
-      span.textContent = fullText;
+      // Show the modal
+      document.getElementById("scheduleSentModal").style.display = "flex";
 
-      const btn = document.createElement("button");
-      btn.className = "remove-btn";
-      btn.textContent = "Remove";
-      btn.onclick = () => {
-        card.remove();
-        saveItems();
-      };
-
-      card.appendChild(span);
-      card.appendChild(btn);
-      document.getElementById("cards").appendChild(card);
-
+      // Hide the time modal
       document.getElementById("timeModal").style.display = "none";
-      saveItems();
+    }
+
+    // Example function to send data to backend (replace with your actual implementation)
+    function sendScheduleToSOS(scheduleText) {
+      // Example: Use fetch or AJAX to send to your backend
+      // fetch('https://your-sos-api/schedule', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ schedule: scheduleText })
+      // });
+      // For now, just log to console
+      console.log("Sent to SOS cloud platform:", scheduleText);
     }
 
     function closeModal(id) {
@@ -580,6 +598,10 @@
 
     function closeSuccessModal() {
       document.getElementById('successModal').style.display = 'none';
+    }
+
+    function closeScheduleSentModal() {
+      document.getElementById('scheduleSentModal').style.display = 'none';
     }
 
     function deleteCustomService(serviceName, buttonElement) {
