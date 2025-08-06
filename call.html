@@ -1,0 +1,1027 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Call Service</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <style>
+    /* Modal positioning within tablet screen */
+    .tablet-screen .modal {
+      position: absolute !important;
+      top: 60px; /* Start below header menu */
+      left: 0;
+      width: 100%;
+      height: calc(100% - 60px); /* Exclude header height */
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
+    }
+    /* Scrollable button container when more than 6 buttons */
+    .buttons-call-container {
+      max-height: none;
+      overflow-y: visible;
+      overflow-x: hidden;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 20px 0;
+      margin-top: 20px; /* Extra space from header */
+      margin-bottom: 120px; /* Extra space from emergency button */
+    }    
+
+    .tablet-screen .modal .modal-content {
+      margin-top: 0;
+      max-height: calc(100vh - 160px); /* Account for header and spacing */
+      overflow-y: auto;
+    }
+
+    /* Specific sizing for calendar modal to prevent header overlap */
+    .tablet-screen #calendarModal .modal-content {
+      max-width: 550px;
+      max-height: none;
+      height: auto;
+      padding: 40px 20px 20px 20px;
+      overflow-y: visible;
+    }
+
+    .tablet-screen #calendarModal .calendar-grid {
+      max-height: none;
+      overflow-y: visible;
+    }
+
+    /* Ensure header elements stay above modals */
+    .header-menu {
+      position: relative;
+      z-index: 10003 !important;
+    }
+
+    .header-back-button {
+      position: relative;
+      z-index: 1101 !important;
+    }
+
+    /* Volume Control Styles */
+    .volume-control {
+      position: absolute;
+      right: 50px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(51, 79, 138, 0.9);
+      border-radius: 25px;
+      padding: 20px 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      z-index: 10500; /* Higher than emergency button (z-index: 5001) and call modals */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    /* Reduced size buttons for 7+ buttons */
+    .buttons-call.compact {
+      gap: 15px !important;
+      margin-top: 2rem;
+    }
+
+    .buttons-call.compact .add-btn {
+      padding: 12px 16px !important;
+      font-size: 2.2rem !important;
+      min-height: 70px !important;
+    }
+
+    .buttons-call.compact .assist-btn-icon {
+      font-size: 3.5rem !important;
+    }
+
+    .volume-slider-container {
+      /* height: 200px; */
+      width: 50px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .volume-slider {
+      writing-mode: bt-lr; /* IE */
+      -webkit-appearance: slider-vertical; /* WebKit */
+      appearance: slider-vertical; /* Standard */
+      width: 200px;
+      /* height: 30px; */
+      background: transparent;
+      outline: none;
+      transform: rotate(0deg);
+      cursor: pointer;
+    }
+
+    .volume-slider::-webkit-slider-track {
+      width: 300px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 25px;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100px;
+      height: 100px;
+      background: #ffffff;
+      border-radius: 100%;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .volume-slider::-moz-range-track {
+      width: 300px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 100%;
+      border: none;
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 100px;
+      height: 100px;
+      background: #ffffff;
+      border-radius: 100%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .volume-icon {
+      color: white;
+      font-size: 30px;
+    }
+
+    .volume-level {
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    /* Add Call Button Styles - Similar to emergency button */
+    .add-call-btn {
+      position: fixed;
+      top: 150px; /* Below the header menu */
+      left: 100px; /* Top left corner */
+      background: linear-gradient(135deg, #4c76a4, #2E5C8A);
+      border: none;
+      border-radius: 25px;
+      padding: 15px 20px;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(46, 92, 138, 0.4);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .add-call-btn:hover {
+      background: linear-gradient(135deg, #4c76a4, #2E5C8A);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(46, 92, 138, 0.5);
+    }
+
+    .add-call-btn .material-icons {
+      font-size: 1.2rem;
+    }
+
+    /* Individual delete button for custom call buttons */
+    .add-btn.custom-contact {
+      position: relative;
+    }
+
+    .add-btn.custom-contact .delete-x {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 2;
+      transition: all 0.2s ease;
+    }
+
+    .add-btn.custom-contact .delete-x:hover {
+      background: #b91c1c;
+      transform: scale(1.1);
+    }
+
+    /* Modal button styles */
+    .modal-btn-primary {
+      background: linear-gradient(135deg, #2E5C8A, #4A7BB0) !important;
+      color: white !important;
+      border: none !important;
+      padding: 20px 35px !important;
+      border-radius: 25px !important;
+      font-size: 1.3rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      min-width: 160px !important;
+      box-shadow: 0 6px 15px rgba(46, 92, 138, 0.4) !important;
+      transition: all 0.3s ease !important;
+      text-transform: uppercase !important;
+    }
+
+    .modal-btn-primary:hover {
+      background: linear-gradient(135deg, #1A4A73, #2E5C8A) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 25px rgba(46, 92, 138, 0.6) !important;
+    }
+
+    .modal-btn-secondary {
+      background: linear-gradient(135deg, #6b7280, #9ca3af) !important;
+      color: white !important;
+      border: none !important;
+      padding: 20px 35px !important;
+      border-radius: 25px !important;
+      font-size: 1.3rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      min-width: 160px !important;
+      box-shadow: 0 6px 15px rgba(107, 114, 128, 0.4) !important;
+      transition: all 0.3s ease !important;
+      text-transform: uppercase !important;
+    }
+
+    .modal-btn-secondary:hover {
+      background: linear-gradient(135deg, #4b5563, #6b7280) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 25px rgba(107, 114, 128, 0.6) !important;
+    }
+  </style>
+</head>
+<body onload="loadItems()">
+  <!-- Android Tablet Frame -->
+  <div class="tablet-frame">
+    <div class="tablet-screen">
+      <!-- Header Menu -->
+      <header class="header-menu">
+        <div class="header-logo">
+          <img src="sosLogo.png" alt="Seniors On Support Logo" class="header-logo-image">
+          <!-- <span class="header-logo-text">Seniors On Support</span> -->
+        </div>
+        <h1 class="header-title">Call Service</h1>
+        <div class="header-datetime" id="headerDateTime"></div>
+        <button onclick="window.location.href='index.html'" class="header-back-button">← Back</button>
+      </header>
+  <!-- <h1>Call Service</h1> -->
+  <div class="container">
+    <div class="buttons-call-container">
+      <div class="buttons-call">
+        <button class="add-btn" onclick="showCallConfirmation('Call Us')">
+          <span class="material-icons assist-btn-icon">support_agent</span>
+          Call Us
+        </button>        
+        <button class="add-btn" onclick="showCallConfirmation('Call son')">
+          <span class="material-icons assist-btn-icon">phone</span>
+          Call son
+        </button>
+        <button class="add-btn" onclick="showCallConfirmation('Call daughter')">
+          <span class="material-icons assist-btn-icon">phone</span>
+          Call daughter
+        </button>
+        <button class="add-btn" onclick="showCallConfirmation('Call nurse')">
+          <span class="material-icons assist-btn-icon">local_hospital</span>
+          Call nurse
+        </button>
+      </div>
+    </div>
+    <!-- <div class="cards" id="cards"></div> -->
+    
+  </div>
+
+  <!-- Volume Control -->
+  <div class="volume-control">
+    <span class="material-icons volume-icon">volume_up</span>
+    <div class="volume-slider-container">
+      <input type="range" min="0" max="100" value="75" class="volume-slider" id="volumeSlider">
+    </div>
+    <span class="volume-level" id="volumeLevel">75%</span>
+  </div>
+
+  <!-- Call Confirmation Modal -->
+  <div id="callConfirmModal" class="emergency-modal" style="display: none;">
+    <div class="emergency-modal-content">
+      <div class="emergency-header">
+        <span class="material-icons emergency-icon">phone</span>
+        <h2 id="callConfirmTitle">MAKE CALL</h2>
+      </div>
+      <div class="emergency-body">
+        <p id="callConfirmMessage">Are you sure you want to make this call?</p>
+      </div>
+      <div class="emergency-actions">
+        <button class="emergency-btn confirm-btn" onclick="confirmCall()">
+          <span class="material-icons">phone</span>
+          YES - CALL NOW
+        </button>
+        <button class="emergency-btn cancel-btn" onclick="closeCallModal()">
+          <span class="material-icons">close</span>
+          CANCEL
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Call In Progress Modal -->
+  <div id="callInProgressModal" class="emergency-modal" style="display: none;">
+    <div class="emergency-modal-content calling-modal">
+      <div class="calling-animation">
+        <div class="phone-icon">
+          <span class="material-icons">phone_in_talk</span>
+        </div>
+        <h2 class="calling-text" id="callingText">Calling...</h2>
+        <div class="loading-dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+      <div class="emergency-actions">
+        <button class="emergency-btn confirm-btn" onclick="closeCallModal()">
+          <span class="material-icons">check</span>
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="calendarModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal('calendarModal')">✖</button>
+      <h3 id="month-title"></h3>
+      <div class="calendar-grid" id="calendar-grid">
+        <div class="calendar-header">Mon</div>
+        <div class="calendar-header">Tue</div>
+        <div class="calendar-header">Wed</div>
+        <div class="calendar-header">Thu</div>
+        <div class="calendar-header">Fri</div>
+        <div class="calendar-header">Sat</div>
+        <div class="calendar-header">Sun</div>
+        <!-- Calendar cells will be dynamically generated here -->
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="timeModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal('timeModal')">✖</button>
+      <h3>Select a time for <span id="selectedDateDisplay"></span></h3>
+      <div class="time-grid" id="timeGrid"></div>
+    </div>
+  </div>
+
+  <!-- Add Contact Modal -->
+  <div class="modal" id="addContactModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeAddContactModal()">✖</button>
+      <h3 style="color: #2E5C8A; font-size: 2.2rem; margin-bottom: 30px; text-align: center; font-weight: 700;">Add New Contact</h3>
+      <div style="padding: 20px 0;">
+        <label for="contactName" style="display: block; font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; color: #2E5C8A;">Contact Name:</label>
+        <input type="text" id="contactName" placeholder="Enter contact name" style="width: 100%; padding: 20px; font-size: 1.3rem; border: 3px solid #2E5C8A; border-radius: 12px; margin-bottom: 30px; box-sizing: border-box; background: #f8f9fa; transition: border-color 0.3s ease; font-weight: 500;">
+        
+        <label for="contactPhone" style="display: block; font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; color: #2E5C8A;">Phone Number:</label>
+        <input type="tel" id="contactPhone" placeholder="Enter phone number" style="width: 100%; padding: 20px; font-size: 1.3rem; border: 3px solid #2E5C8A; border-radius: 12px; margin-bottom: 40px; box-sizing: border-box; background: #f8f9fa; transition: border-color 0.3s ease; font-weight: 500;">
+        
+        <div style="display: flex; gap: 20px; justify-content: center;">
+          <button onclick="addNewContact()" class="modal-btn-primary">Add Contact</button>
+          <button onclick="closeAddContactModal()" class="modal-btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Limit Reached Modal -->
+  <div class="modal" id="limitReachedModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeLimitReachedModal()">✖</button>
+      <h3 style="color: #dc2626; font-size: 2.4rem; margin-bottom: 40px; text-align: center; font-weight: 700;">Too Many Contacts</h3>
+      <div style="padding: 20px 0; text-align: center;">
+        <p style="font-size: 1.8rem; color: #2E5C8A; margin-bottom: 40px; line-height: 1.6; font-weight: 600;">
+          You can only have <strong style="color: #dc2626;">4 contacts</strong>.
+        </p>
+        <p style="font-size: 1.6rem; color: #4A7BB0; margin-bottom: 50px; line-height: 1.5; font-weight: 500;">
+          To add a new contact, please delete one first by clicking the red ✖ button.
+        </p>
+        <button onclick="closeLimitReachedModal()" style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: none; padding: 25px 50px; border-radius: 25px; font-size: 1.5rem; font-weight: 700; cursor: pointer; min-width: 180px; box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4); transition: all 0.3s ease; text-transform: uppercase;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal" id="successModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeSuccessModal()">✖</button>
+      <h3 style="color: #2E5C8A; font-size: 2.4rem; margin-bottom: 40px; text-align: center; font-weight: 700;">Contact Added!</h3>
+      <div style="padding: 20px 0; text-align: center;">
+        <div style="margin-bottom: 40px;">
+          <span class="material-icons" style="font-size: 4rem; color: #4A7BB0; margin-bottom: 20px;">check_circle</span>
+        </div>
+        <p id="successMessage" style="font-size: 1.8rem; color: #2E5C8A; margin-bottom: 50px; line-height: 1.6; font-weight: 600;">
+          Contact has been added successfully!
+        </p>
+        <button onclick="closeSuccessModal()" style="background: linear-gradient(135deg, #2E5C8A, #4A7BB0); color: white; border: none; padding: 25px 50px; border-radius: 25px; font-size: 1.5rem; font-weight: 700; cursor: pointer; min-width: 180px; box-shadow: 0 6px 15px rgba(46, 92, 138, 0.4); transition: all 0.3s ease; text-transform: uppercase;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentText = "";
+    let selectedDate = "";
+    let currentCallType = "";
+
+    // Call confirmation functionality
+    function showCallConfirmation(callType) {
+      currentCallType = callType;
+      document.getElementById("callConfirmMessage").textContent = `Are you sure you want to ${callType.toLowerCase()}?`;
+      document.getElementById("callConfirmModal").style.display = "flex";
+      // Don't disable volume control during confirmation - only during actual calls
+    }
+
+    function confirmCall() {
+      document.getElementById("callConfirmModal").style.display = "none";
+      document.getElementById("callingText").textContent = "Calling...";
+      document.getElementById("callInProgressModal").style.display = "flex";
+      
+      // Disable volume control only during active call
+      disableVolumeControl();
+      
+      // Add call to history
+      addCallToHistory(currentCallType);
+    }
+
+    function closeCallModal() {
+      document.getElementById("callConfirmModal").style.display = "none";
+      document.getElementById("callInProgressModal").style.display = "none";
+      currentCallType = "";
+      // Re-enable volume control when call is ended
+      enableVolumeControl();
+    }
+
+    function addCallToHistory(callText) {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+      });
+      const dateString = now.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      });
+      
+      const fullText = `${callText} — ${dateString} at ${timeString}`;
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const span = document.createElement("span");
+      span.textContent = fullText;
+
+      const btn = document.createElement("button");
+      btn.className = "remove-btn";
+      btn.textContent = "Remove";
+      btn.onclick = () => {
+        card.remove();
+        saveItems();
+      };
+
+      card.appendChild(span);
+      card.appendChild(btn);
+      document.getElementById("cards").appendChild(card);
+      
+      saveItems();
+    }
+
+    // Volume control functionality
+    function initVolumeControl() {
+      const volumeSlider = document.getElementById('volumeSlider');
+      const volumeLevel = document.getElementById('volumeLevel');
+      const volumeIcon = document.querySelector('.volume-icon');
+      
+      // Update volume display
+      function updateVolume() {
+        const value = volumeSlider.value;
+        volumeLevel.textContent = value + '%';
+        
+        // Update icon based on volume level
+        if (value == 0) {
+          volumeIcon.textContent = 'volume_off';
+        } else if (value < 30) {
+          volumeIcon.textContent = 'volume_down';
+        } else {
+          volumeIcon.textContent = 'volume_up';
+        }
+      }
+      
+      // Initial setup
+      updateVolume();
+      
+      // Listen for volume changes
+      volumeSlider.addEventListener('input', updateVolume);
+      
+      // Store volume preference
+      volumeSlider.addEventListener('change', function() {
+        localStorage.setItem('callVolumeLevel', this.value);
+      });
+      
+      // Load saved volume preference
+      const savedVolume = localStorage.getItem('callVolumeLevel');
+      if (savedVolume !== null) {
+        volumeSlider.value = savedVolume;
+        updateVolume();
+      }
+    }
+
+    // Disable volume control during calls/emergencies
+    function disableVolumeControl() {
+      const volumeSlider = document.getElementById('volumeSlider');
+      const volumeControl = document.querySelector('.volume-control');
+      
+      if (volumeSlider) {
+        volumeSlider.disabled = true;
+        volumeSlider.style.opacity = '0.5';
+        volumeSlider.style.pointerEvents = 'none';
+      }
+      
+      if (volumeControl) {
+        volumeControl.style.opacity = '0.5';
+        volumeControl.style.pointerEvents = 'none';
+      }
+    }
+
+    // Re-enable volume control after calls/emergencies
+    function enableVolumeControl() {
+      const volumeSlider = document.getElementById('volumeSlider');
+      const volumeControl = document.querySelector('.volume-control');
+      
+      if (volumeSlider) {
+        volumeSlider.disabled = false;
+        volumeSlider.style.opacity = '1';
+        volumeSlider.style.pointerEvents = 'auto';
+      }
+      
+      if (volumeControl) {
+        volumeControl.style.opacity = '1';
+        volumeControl.style.pointerEvents = 'auto';
+      }
+    }
+
+    // Initialize volume control when page loads
+    window.addEventListener('DOMContentLoaded', initVolumeControl);
+
+    // Individual delete functionality for custom contacts
+    function deleteCustomContact(contactName, buttonElement) {
+      if (confirm(`Are you sure you want to remove ${contactName}?`)) {
+        // Remove from localStorage
+        removeContactFromStorage(contactName);
+        
+        // Remove button from DOM
+        buttonElement.remove();
+        
+        // Update layout
+        updateButtonLayout();
+      }
+    }
+
+    function removeContactFromStorage(contactName) {
+      let savedContacts = JSON.parse(localStorage.getItem('customContacts') || '[]');
+      savedContacts = savedContacts.filter(contact => contact.name !== contactName);
+      localStorage.setItem('customContacts', JSON.stringify(savedContacts));
+    }
+
+    // Add Contact Modal Functions
+    function showAddContactModal() {
+      document.getElementById('addContactModal').style.display = 'flex';
+      // Clear previous input values
+      document.getElementById('contactName').value = '';
+      document.getElementById('contactPhone').value = '';
+      // Focus on name input for better UX
+      setTimeout(() => {
+        document.getElementById('contactName').focus();
+      }, 100);
+    }
+
+    function closeAddContactModal() {
+      document.getElementById('addContactModal').style.display = 'none';
+      // Clear input values when closing
+      document.getElementById('contactName').value = '';
+      document.getElementById('contactPhone').value = '';
+    }
+
+    function closeLimitReachedModal() {
+      document.getElementById('limitReachedModal').style.display = 'none';
+    }
+
+    function closeSuccessModal() {
+      document.getElementById('successModal').style.display = 'none';
+    }
+
+    function addNewContact() {
+      // Check current number of custom contacts
+      const customButtons = document.querySelectorAll('.buttons-call .add-btn.custom-contact');
+      if (customButtons.length >= 4) {
+        closeAddContactModal();
+        document.getElementById('limitReachedModal').style.display = 'flex';
+        return;
+      }
+      
+      const name = document.getElementById('contactName').value.trim();
+      const phone = document.getElementById('contactPhone').value.trim();
+      
+      // Validate inputs
+      if (!name) {
+        alert('Please enter a name for your contact.');
+        document.getElementById('contactName').focus();
+        return;
+      }
+      
+      if (!phone) {
+        alert('Please enter a phone number for your contact.');
+        document.getElementById('contactPhone').focus();
+        return;
+      }
+      
+      // Create new button for the contact
+      const buttonsContainer = document.querySelector('.buttons-call');
+      
+      // Create new contact button
+      const newButton = document.createElement('button');
+      newButton.className = 'add-btn custom-contact';
+      newButton.onclick = () => showCallConfirmation(`Call ${name}`);
+      newButton.innerHTML = `
+        <span class="material-icons assist-btn-icon">phone</span>
+        Call ${name}
+        <button class="delete-x" onclick="event.stopPropagation(); deleteCustomContact('${name}', this.parentElement);">✖</button>
+      `;
+      
+      // Add new button to the end of the grid
+      buttonsContainer.appendChild(newButton);
+      
+      // Save contact to localStorage for persistence
+      saveNewContact(name, phone);
+      
+      // Update grid layout for scrolling if needed
+      updateButtonLayout();
+      
+      // Close modal and show success message
+      closeAddContactModal();
+      document.getElementById('successMessage').textContent = `${name} has been added to your contacts!`;
+      document.getElementById('successModal').style.display = 'flex';
+    }
+
+    // Function to update button layout based on number of buttons
+    function updateButtonLayout() {
+      const buttonsContainer = document.querySelector('.buttons-call');
+      const buttons = buttonsContainer.querySelectorAll('.add-btn');
+      const buttonCount = buttons.length;
+      
+      // If 7 or more buttons, apply compact styling to reduce size
+      if (buttonCount >= 7) {
+        buttonsContainer.classList.add('compact');
+        // Calculate rows needed for 2-column layout
+        const rows = Math.ceil(buttonCount / 2);
+        buttonsContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+        buttonsContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+      } else {
+        buttonsContainer.classList.remove('compact');
+        // Keep original 2x2 layout for 4 or fewer buttons, or 2x3 for 5-6 buttons
+        if (buttonCount <= 4) {
+          buttonsContainer.style.gridTemplateRows = 'repeat(2, 1fr)';
+        } else {
+          buttonsContainer.style.gridTemplateRows = 'repeat(3, 1fr)';
+        }
+        buttonsContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+      }
+      
+      // Always keep scrolling disabled and maintain proper margins
+      const scrollContainer = document.querySelector('.buttons-call-container');
+      scrollContainer.style.maxHeight = 'none';
+      scrollContainer.style.overflowY = 'visible';
+      scrollContainer.style.marginTop = '20px';
+      scrollContainer.style.marginBottom = '120px';
+    }
+
+    function saveNewContact(name, phone) {
+      // Get existing contacts from localStorage
+      let savedContacts = JSON.parse(localStorage.getItem('customContacts') || '[]');
+      
+      // Add new contact
+      savedContacts.push({ name: name, phone: phone });
+      
+      // Save back to localStorage
+      localStorage.setItem('customContacts', JSON.stringify(savedContacts));
+    }
+
+    function loadSavedContacts() {
+      // Get saved contacts from localStorage
+      const savedContacts = JSON.parse(localStorage.getItem('customContacts') || '[]');
+      
+      if (savedContacts.length > 0) {
+        const buttonsContainer = document.querySelector('.buttons-call');
+        
+        // Add each saved contact as a button to the grid
+        savedContacts.forEach(contact => {
+          const newButton = document.createElement('button');
+          newButton.className = 'add-btn custom-contact';
+          newButton.onclick = () => showCallConfirmation(`Call ${contact.name}`);
+          newButton.innerHTML = `
+            <span class="material-icons assist-btn-icon">phone</span>
+            Call ${contact.name}
+            <button class="delete-x" onclick="event.stopPropagation(); deleteCustomContact('${contact.name}', this.parentElement);">✖</button>
+          `;
+          
+          // Add to the end of the grid
+          buttonsContainer.appendChild(newButton);
+        });
+        
+        // Update layout after loading all contacts
+        updateButtonLayout();
+      }
+    }
+
+    function generateCalendar() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1; // getMonth() returns 0-11, we need 1-12
+      
+      // Month names for display
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+      
+      // Set month title
+      document.getElementById("month-title").textContent = `${monthNames[month - 1]} ${year}`;
+      
+      // Get first day of month and number of days
+      const firstDay = new Date(year, month - 1, 1);
+      const lastDay = new Date(year, month, 0);
+      const daysInMonth = lastDay.getDate();
+      
+      // Get day of week for first day (0 = Sunday, 1 = Monday, etc.)
+      // Convert to Monday = 0, Sunday = 6 for our calendar
+      let startDayOfWeek = firstDay.getDay();
+      startDayOfWeek = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1;
+      
+      // Get calendar grid container (skip the headers)
+      const calendarGrid = document.getElementById("calendar-grid");
+      
+      // Remove existing calendar cells (keep headers)
+      const existingCells = calendarGrid.querySelectorAll('.calendar-cell');
+      existingCells.forEach(cell => cell.remove());
+      
+      // Add empty cells for days before the first day of month
+      for (let i = 0; i < startDayOfWeek; i++) {
+        const emptyCell = document.createElement("div");
+        emptyCell.className = "calendar-cell empty";
+        calendarGrid.appendChild(emptyCell);
+      }
+      
+      // Add cells for each day of the month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayCell = document.createElement("div");
+        dayCell.className = "calendar-cell";
+        dayCell.textContent = day;
+        dayCell.onclick = () => selectDate(year, month, day);
+        calendarGrid.appendChild(dayCell);
+      }
+    }
+
+    function addItem(text) {
+      currentText = text;
+      generateCalendar(); // Generate calendar when modal opens
+      document.getElementById("calendarModal").style.display = "flex";
+    }
+
+    function selectDate(year, month, day) {
+      const m = String(month).padStart(2, '0');
+      const d = String(day).padStart(2, '0');
+      selectedDate = `${year}-${m}-${d}`;
+      document.getElementById("calendarModal").style.display = "none";
+      document.getElementById("selectedDateDisplay").textContent = selectedDate;
+      showTimeModal();
+    }
+
+    function showTimeModal() {
+      const container = document.getElementById("timeGrid");
+      container.innerHTML = "";
+      for (let h = 8; h <= 18; h++) {
+        for (let m of [0, 30]) {
+          const hour = String(h).padStart(2, '0');
+          const min = String(m).padStart(2, '0');
+          const btn = document.createElement("button");
+          btn.className = "time-button";
+          btn.textContent = `${hour}:${min}`;
+          btn.onclick = () => confirmTime(`${hour}:${min}`);
+          container.appendChild(btn);
+        }
+      }
+      document.getElementById("timeModal").style.display = "flex";
+    }
+
+    function confirmTime(time) {
+      const fullText = `${currentText} — ${selectedDate} at ${time}`;
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const span = document.createElement("span");
+      span.textContent = fullText;
+
+      const btn = document.createElement("button");
+      btn.className = "remove-btn";
+      btn.textContent = "Remove";
+      btn.onclick = () => {
+        card.remove();
+        saveItems();
+      };
+
+      card.appendChild(span);
+      card.appendChild(btn);
+      document.getElementById("cards").appendChild(card);
+
+      document.getElementById("timeModal").style.display = "none";
+      saveItems();
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+      currentText = "";
+      selectedDate = "";
+    }
+
+    function saveItems() {
+      const spans = document.querySelectorAll("#cards .card span");
+      const values = Array.from(spans).map(s => s.textContent);
+      sessionStorage.setItem("call_items", JSON.stringify(values));
+    }
+
+    function loadItems() {
+      const saved = sessionStorage.getItem("call_items");
+      if (!saved) return;
+      const items = JSON.parse(saved);
+      items.forEach(text => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const span = document.createElement("span");
+        span.textContent = text;
+
+        const btn = document.createElement("button");
+        btn.className = "remove-btn";
+        btn.textContent = "Remove";
+        btn.onclick = () => {
+          card.remove();
+          saveItems();
+        };
+
+        card.appendChild(span);
+        card.appendChild(btn);
+        document.getElementById("cards").appendChild(card);
+      });
+      
+      // Load saved custom contacts
+      loadSavedContacts();
+      
+      // Initialize button layout
+      setTimeout(() => {
+        updateButtonLayout();
+      }, 100);
+    }
+  </script>
+
+  <!-- Emergency 911 Button - Always visible -->
+  <button class="emergency-911-btn" onclick="emergency911()">
+    <span class="material-icons">local_hospital</span>
+    Emergency 911
+  </button>
+
+  <!-- Add Call Button - Top left corner -->
+  <button class="add-call-btn" onclick="showAddContactModal()">
+    <span class="material-icons">person_add</span>
+    Add Call
+  </button>
+
+  <!-- Emergency Modal -->
+  <div id="emergencyModal" class="emergency-modal" style="display: none;">
+    <div class="emergency-modal-content">
+      <div class="emergency-header">
+        <span class="material-icons emergency-icon">warning</span>
+        <h2>EMERGENCY CALL</h2>
+      </div>
+      <div class="emergency-body">
+        <p>This will call 911 emergency services immediately.</p>
+        <p><strong>Are you sure you want to continue?</strong></p>
+      </div>
+      <div class="emergency-actions">
+        <button class="emergency-btn confirm-btn" onclick="confirmEmergency()">
+          <span class="material-icons">phone</span>
+          YES - CALL 911 NOW
+        </button>
+        <button class="emergency-btn cancel-btn" onclick="closeEmergencyModal()">
+          <span class="material-icons">close</span>
+          CANCEL
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emergency Follow-up Modal -->
+  <div id="emergencyCallingModal" class="emergency-modal" style="display: none;">
+    <div class="emergency-modal-content calling-modal">
+      <div class="calling-animation">
+        <div class="phone-icon">
+          <span class="material-icons">phone_in_talk</span>
+        </div>
+        <h2 class="calling-text">Calling 911...</h2>
+        <div class="loading-dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+      <div class="emergency-actions">
+        <button class="emergency-btn confirm-btn" onclick="closeEmergencyModal()">
+          <span class="material-icons">check</span>
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+
+    </div>
+    <!-- Tablet frame elements -->
+    <div class="tablet-home-button"></div>
+    <div class="tablet-speaker tablet-speaker-top"></div>
+    <div class="tablet-speaker tablet-speaker-bottom"></div>
+    <div class="tablet-camera"></div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Emergency functions - disable volume control during emergency calls
+    function emergency911() {
+      document.getElementById('emergencyModal').style.display = 'flex';
+      // Don't disable volume control during confirmation - only during actual emergency calls
+    }
+
+    function confirmEmergency() {
+      document.getElementById('emergencyModal').style.display = 'none';
+      document.getElementById('emergencyCallingModal').style.display = 'flex';
+      // Disable volume control only during active emergency call
+      disableVolumeControl();
+    }
+
+    function closeEmergencyModal() {
+      document.getElementById('emergencyModal').style.display = 'none';
+      document.getElementById('emergencyCallingModal').style.display = 'none';
+      // Re-enable volume control when emergency call is ended
+      enableVolumeControl();
+    }
+
+    // Update date and time display
+    function updateDateTime() {
+      const now = new Date();
+      const options = {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      };
+      const dateTimeString = now.toLocaleDateString('en-US', options);
+      document.getElementById('headerDateTime').textContent = dateTimeString;
+    }
+
+    // Update immediately and then every minute
+    updateDateTime();
+    setInterval(updateDateTime, 60000);
+  </script>
+</body>
+</html>

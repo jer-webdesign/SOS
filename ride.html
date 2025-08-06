@@ -1,0 +1,715 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ride Service</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <style>
+    /* Modal positioning within tablet screen */
+    .tablet-screen .modal {
+      position: absolute !important;
+      top: 80px; /* Start below header menu */
+      left: 0;
+      width: 100%;
+      height: calc(100% - 80px); /* Exclude header height */
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
+    }
+
+    .tablet-screen .modal .modal-content {
+      margin-top: 0;
+      max-height: calc(100vh - 160px); /* Account for header and spacing */
+      overflow-y: auto;
+    }
+
+    /* Specific sizing for calendar modal to prevent header overlap */
+    .tablet-screen #calendarModal .modal-content {
+      max-width: 550px;
+      max-height: none;
+      height: auto;
+      padding: 40px 20px 20px 20px;
+      overflow-y: visible;
+    }
+
+    .tablet-screen #calendarModal .calendar-grid {
+      max-height: none;
+      overflow-y: visible;
+    }
+
+    /* Ensure header elements stay above modals */
+    .header-menu {
+      position: relative;
+      z-index: 10003 !important;
+    }
+
+    .header-back-button {
+      position: relative;
+      z-index: 1101 !important;
+    }
+
+    /* Add Ride Button Styles - Similar to emergency button */
+    .add-ride-btn {
+      position: fixed;
+      top: 150px; /* Below the header menu */
+      left: 100px; /* Top left corner */
+      background: linear-gradient(135deg, #4c76a4, #2E5C8A);
+      border: none;
+      border-radius: 25px;
+      padding: 15px 20px;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(46, 92, 138, 0.4);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .add-ride-btn:hover {
+      background: linear-gradient(135deg, #4c76a4, #2E5C8A);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(46, 92, 138, 0.5);
+    }
+
+    .add-ride-btn .material-icons {
+      font-size: 1.2rem;
+    }
+
+    /* Individual delete button for custom ride services */
+    .add-btn.custom-ride {
+      position: relative;
+    }
+
+    .add-btn.custom-ride .delete-x {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 2;
+      transition: all 0.2s ease;
+    }
+
+    .add-btn.custom-ride .delete-x:hover {
+      background: #b91c1c;
+      transform: scale(1.1);
+    }
+
+    /* Modal button styles */
+    .modal-btn-primary {
+      background: linear-gradient(135deg, #2E5C8A, #4A7BB0) !important;
+      color: white !important;
+      border: none !important;
+      padding: 20px 35px !important;
+      border-radius: 25px !important;
+      font-size: 1.3rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      min-width: 160px !important;
+      box-shadow: 0 6px 15px rgba(46, 92, 138, 0.4) !important;
+      transition: all 0.3s ease !important;
+      text-transform: uppercase !important;
+    }
+
+    .modal-btn-primary:hover {
+      background: linear-gradient(135deg, #1A4A73, #2E5C8A) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 25px rgba(46, 92, 138, 0.6) !important;
+    }
+
+    .modal-btn-secondary {
+      background: linear-gradient(135deg, #6b7280, #9ca3af) !important;
+      color: white !important;
+      border: none !important;
+      padding: 20px 35px !important;
+      border-radius: 25px !important;
+      font-size: 1.3rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      min-width: 160px !important;
+      box-shadow: 0 6px 15px rgba(107, 114, 128, 0.4) !important;
+      transition: all 0.3s ease !important;
+      text-transform: uppercase !important;
+    }
+
+    .modal-btn-secondary:hover {
+      background: linear-gradient(135deg, #4b5563, #6b7280) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 25px rgba(107, 114, 128, 0.6) !important;
+    }
+
+    /* Reduced size buttons for 7+ buttons */
+    .buttons-ride.compact {
+      gap: 15px !important;
+      margin-top: 2rem;
+    }
+
+    .buttons-ride.compact .add-btn {
+      padding: 12px 16px !important;
+      font-size: 2.2rem !important;
+      min-height: 70px !important;
+    }
+
+    .buttons-ride.compact .material-symbols-outlined {
+      font-size: 3.5rem !important;
+    }
+  </style>
+</head>
+<body onload="loadItems()">
+  <!-- Android Tablet Frame -->
+  <div class="tablet-frame">
+    <div class="tablet-screen">
+      <!-- Header Menu -->
+      <header class="header-menu">
+        <div class="header-logo">
+          <img src="sosLogo.png" alt="Seniors On Support Logo" class="header-logo-image">
+          <!-- <span class="header-logo-text">Seniors On Support</span> -->
+        </div>
+        <h1 class="header-title">Rides Service</h1>
+        <div class="header-datetime" id="headerDateTime"></div>
+        <button onclick="window.location.href='index.html'" class="header-back-button">← Back</button>
+      </header>
+  
+  <!-- <h1 class="service-title">Rides Service</h1> -->
+  <!-- <h1>Ride Service</h1> -->
+  <div class="container">
+    <div class="buttons-ride">
+      <button class="add-btn" onclick="addItem('Ride to doctor')">
+        <span class="material-symbols-outlined">local_hospital</span>
+        Ride to doctor
+      </button>
+      <button class="add-btn" onclick="addItem('Ride to pharmacy')">
+        <span class="material-symbols-outlined">local_pharmacy</span>
+        Ride to pharmacy
+      </button>
+      <button class="add-btn" onclick="addItem('Ride to family')">
+        <span class="material-symbols-outlined">group</span>
+        Ride to family
+      </button>
+    </div>
+    <div class="cards" id="cards"></div>
+    
+  </div>
+
+  <div class="modal" id="calendarModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal('calendarModal')">✖</button>
+      <h3 id="month-title"></h3>
+      <div class="calendar-grid" id="calendar-grid">
+        <div class="calendar-header">Mon</div>
+        <div class="calendar-header">Tue</div>
+        <div class="calendar-header">Wed</div>
+        <div class="calendar-header">Thu</div>
+        <div class="calendar-header">Fri</div>
+        <div class="calendar-header">Sat</div>
+        <div class="calendar-header">Sun</div>
+        <!-- Calendar cells will be dynamically generated here -->
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="timeModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal('timeModal')">✖</button>
+      <h3>Select a time for <span id="selectedDateDisplay"></span></h3>
+      <div class="time-grid" id="timeGrid"></div>
+    </div>
+  </div>
+
+  <!-- Add Ride Service Modal -->
+  <div class="modal" id="addRideModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeAddRideModal()">✖</button>
+      <h3 style="color: #2E5C8A; font-size: 2.2rem; margin-bottom: 30px; text-align: center; font-weight: 700;">Add New Ride Service</h3>
+      <div style="padding: 20px 0;">
+        <label for="rideDestination" style="display: block; font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; color: #2E5C8A;">Where do you need a ride to?</label>
+        <input type="text" id="rideDestination" placeholder="Enter destination (e.g., grocery store, bank)" style="width: 100%; padding: 20px; font-size: 1.3rem; border: 3px solid #2E5C8A; border-radius: 12px; margin-bottom: 40px; box-sizing: border-box; background: #f8f9fa; transition: border-color 0.3s ease; font-weight: 500;">
+        
+        <div style="display: flex; gap: 20px; justify-content: center;">
+          <button onclick="addNewRideService()" class="modal-btn-primary">Add Ride</button>
+          <button onclick="closeAddRideModal()" class="modal-btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Limit Reached Modal -->
+  <div class="modal" id="limitReachedModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeLimitReachedModal()">✖</button>
+      <h3 style="color: #dc2626; font-size: 2.4rem; margin-bottom: 40px; text-align: center; font-weight: 700;">Too Many Rides</h3>
+      <div style="padding: 20px 0; text-align: center;">
+        <p style="font-size: 1.8rem; color: #2E5C8A; margin-bottom: 40px; line-height: 1.6; font-weight: 600;">
+          You can only have <strong style="color: #dc2626;">4 ride services</strong>.
+        </p>
+        <p style="font-size: 1.6rem; color: #4A7BB0; margin-bottom: 50px; line-height: 1.5; font-weight: 500;">
+          To add a new ride, please delete one first by clicking the red ✖ button.
+        </p>
+        <button onclick="closeLimitReachedModal()" style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: none; padding: 25px 50px; border-radius: 25px; font-size: 1.5rem; font-weight: 700; cursor: pointer; min-width: 180px; box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4); transition: all 0.3s ease; text-transform: uppercase;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal" id="successModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeSuccessModal()">✖</button>
+      <h3 style="color: #2E5C8A; font-size: 2.4rem; margin-bottom: 40px; text-align: center; font-weight: 700;">Ride Added!</h3>
+      <div style="padding: 20px 0; text-align: center;">
+        <div style="margin-bottom: 40px;">
+          <span class="material-icons" style="font-size: 4rem; color: #4A7BB0; margin-bottom: 20px;">check_circle</span>
+        </div>
+        <p id="successMessage" style="font-size: 1.8rem; color: #2E5C8A; margin-bottom: 50px; line-height: 1.6; font-weight: 600;">
+          Ride service has been added successfully!
+        </p>
+        <button onclick="closeSuccessModal()" style="background: linear-gradient(135deg, #2E5C8A, #4A7BB0); color: white; border: none; padding: 25px 50px; border-radius: 25px; font-size: 1.5rem; font-weight: 700; cursor: pointer; min-width: 180px; box-shadow: 0 6px 15px rgba(46, 92, 138, 0.4); transition: all 0.3s ease; text-transform: uppercase;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Validation Error Modal -->
+  <div class="modal" id="validationErrorModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeValidationErrorModal()">✖</button>
+      <h3 style="color: #dc2626; font-size: 2.4rem; margin-bottom: 40px; text-align: center; font-weight: 700;">Input Required</h3>
+      <div style="padding: 20px 0; text-align: center;">
+        <div style="margin-bottom: 40px;">
+          <span class="material-icons" style="font-size: 4rem; color: #dc2626; margin-bottom: 20px;">error</span>
+        </div>
+        <p id="validationErrorMessage" style="font-size: 1.8rem; color: #2E5C8A; margin-bottom: 50px; line-height: 1.6; font-weight: 600;">
+          Please enter a destination.
+        </p>
+        <button onclick="closeValidationErrorModal()" style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: none; padding: 25px 50px; border-radius: 25px; font-size: 1.5rem; font-weight: 700; cursor: pointer; min-width: 180px; box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4); transition: all 0.3s ease; text-transform: uppercase;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentText = "";
+    let selectedDate = "";
+
+    function addItem(text) {
+      currentText = text;
+      generateCalendar();
+      document.getElementById("calendarModal").style.display = "flex";
+    }
+
+    function selectDate(year, month, day) {
+      const m = String(month).padStart(2, '0');
+      const d = String(day).padStart(2, '0');
+      selectedDate = `${year}-${m}-${d}`;
+      document.getElementById("calendarModal").style.display = "none";
+      document.getElementById("selectedDateDisplay").textContent = selectedDate;
+      showTimeModal();
+    }
+
+    function showTimeModal() {
+      const container = document.getElementById("timeGrid");
+      container.innerHTML = "";
+      for (let h = 8; h <= 18; h++) {
+        for (let m of [0, 30]) {
+          const hour = String(h).padStart(2, '0');
+          const min = String(m).padStart(2, '0');
+          const btn = document.createElement("button");
+          btn.className = "time-button";
+          btn.textContent = `${hour}:${min}`;
+          btn.onclick = () => confirmTime(`${hour}:${min}`);
+          container.appendChild(btn);
+        }
+      }
+      document.getElementById("timeModal").style.display = "flex";
+    }
+
+    function confirmTime(time) {
+      const fullText = `${currentText} — ${selectedDate} at ${time}`;
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const span = document.createElement("span");
+      span.textContent = fullText;
+
+      const btn = document.createElement("button");
+      btn.className = "remove-btn";
+      btn.textContent = "Remove";
+      btn.onclick = () => {
+        card.remove();
+        saveItems();
+      };
+
+      card.appendChild(span);
+      card.appendChild(btn);
+      document.getElementById("cards").appendChild(card);
+
+      document.getElementById("timeModal").style.display = "none";
+      saveItems();
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+      currentText = "";
+      selectedDate = "";
+    }
+
+    function saveItems() {
+      const spans = document.querySelectorAll("#cards .card span");
+      const values = Array.from(spans).map(s => s.textContent);
+      sessionStorage.setItem("ride_items", JSON.stringify(values));
+    }
+
+    function generateCalendar() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+      
+      document.getElementById("month-title").textContent = `${monthNames[month]} ${year}`;
+      
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const startDate = new Date(firstDay);
+      startDate.setDate(startDate.getDate() - (firstDay.getDay() + 6) % 7);
+      
+      const calendarGrid = document.getElementById("calendar-grid");
+      
+      // Remove all existing calendar cells
+      const existingCells = calendarGrid.querySelectorAll('.calendar-cell');
+      existingCells.forEach(cell => cell.remove());
+      
+      const today = new Date();
+      
+      for (let i = 0; i < 42; i++) {
+        const currentDate = new Date(startDate);
+        currentDate.setDate(startDate.getDate() + i);
+        
+        // Only generate cells up to the end of the month
+        if (currentDate.getMonth() > month || (currentDate.getMonth() < month && currentDate.getFullYear() > year)) {
+          break;
+        }
+        
+        const cell = document.createElement("div");
+        cell.className = "calendar-cell";
+        
+        if (currentDate.getMonth() !== month) {
+          cell.className += " empty";
+        } else {
+          cell.textContent = currentDate.getDate();
+          cell.onclick = () => selectDate(year, month + 1, currentDate.getDate());
+        }
+        
+        calendarGrid.appendChild(cell);
+      }
+    }
+
+    function loadItems() {
+      const saved = sessionStorage.getItem("ride_items");
+      if (!saved) return;
+      const items = JSON.parse(saved);
+      items.forEach(text => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const span = document.createElement("span");
+        span.textContent = text;
+
+        const btn = document.createElement("button");
+        btn.className = "remove-btn";
+        btn.textContent = "Remove";
+        btn.onclick = () => {
+          card.remove();
+          saveItems();
+        };
+
+        card.appendChild(span);
+        card.appendChild(btn);
+        document.getElementById("cards").appendChild(card);
+      });
+      
+      // Load saved custom ride services
+      loadSavedRideServices();
+    }
+
+    // Add Ride Service Modal Functions
+    function showAddRideModal() {
+      // Check current number of custom rides
+      const customButtons = document.querySelectorAll('.buttons-ride .add-btn.custom-ride');
+      if (customButtons.length >= 4) {
+        document.getElementById('limitReachedModal').style.display = 'flex';
+        return;
+      }
+
+      document.getElementById('addRideModal').style.display = 'flex';
+      // Clear previous input value
+      document.getElementById('rideDestination').value = '';
+      // Focus on input for better UX
+      setTimeout(() => {
+        document.getElementById('rideDestination').focus();
+      }, 100);
+    }
+
+    function closeAddRideModal() {
+      document.getElementById('addRideModal').style.display = 'none';
+      // Clear input value when closing
+      document.getElementById('rideDestination').value = '';
+    }
+
+    function closeLimitReachedModal() {
+      document.getElementById('limitReachedModal').style.display = 'none';
+    }
+
+    function closeSuccessModal() {
+      document.getElementById('successModal').style.display = 'none';
+    }
+
+    function showValidationErrorModal(message) {
+      document.getElementById('validationErrorMessage').textContent = message;
+      document.getElementById('validationErrorModal').style.display = 'flex';
+    }
+
+    function closeValidationErrorModal() {
+      document.getElementById('validationErrorModal').style.display = 'none';
+    }
+
+    function deleteCustomRide(rideName, buttonElement) {
+      // Remove the button element
+      buttonElement.remove();
+      
+      // Remove from localStorage
+      let savedRides = JSON.parse(localStorage.getItem('customRideServices') || '[]');
+      savedRides = savedRides.filter(ride => ride.name !== rideName);
+      localStorage.setItem('customRideServices', JSON.stringify(savedRides));
+      
+      // Update layout after deletion
+      updateButtonLayout();
+    }
+
+    function addNewRideService() {
+      // Check current number of custom rides
+      const customButtons = document.querySelectorAll('.buttons-ride .add-btn.custom-ride');
+      if (customButtons.length >= 4) {
+        closeAddRideModal();
+        document.getElementById('limitReachedModal').style.display = 'flex';
+        return;
+      }
+
+      const destination = document.getElementById('rideDestination').value.trim();
+      
+      // Validate input
+      if (!destination) {
+        showValidationErrorModal('Please enter a destination.');
+        document.getElementById('rideDestination').focus();
+        return;
+      }
+      
+      // Ensure it starts with "Ride to" if not already included
+      let serviceName = destination;
+      if (!destination.toLowerCase().startsWith('ride to')) {
+        serviceName = `Ride to ${destination}`;
+      }
+      
+      // Create new button for the service
+      const buttonsContainer = document.querySelector('.buttons-ride');
+      
+      // Create new service button
+      const newButton = document.createElement('button');
+      newButton.className = 'add-btn custom-ride';
+      newButton.onclick = () => addItem(serviceName);
+      newButton.innerHTML = `
+        <span class="material-symbols-outlined">directions_car</span>
+        ${serviceName}
+        <button class="delete-x" onclick="event.stopPropagation(); deleteCustomRide('${serviceName}', this.parentElement);">✖</button>
+      `;
+      
+      // Add new button to the end
+      buttonsContainer.appendChild(newButton);
+      
+      // Save service to localStorage for persistence
+      saveNewRideService(serviceName);
+      
+      // Update button layout
+      updateButtonLayout();
+      
+      // Close modal and show success message
+      closeAddRideModal();
+      document.getElementById('successMessage').textContent = `${serviceName} has been added to your rides!`;
+      document.getElementById('successModal').style.display = 'flex';
+    }
+
+    // Function to update button layout based on number of buttons
+    function updateButtonLayout() {
+      const buttonsContainer = document.querySelector('.buttons-ride');
+      const buttons = buttonsContainer.querySelectorAll('.add-btn');
+      const buttonCount = buttons.length;
+      
+      // If 7 or more buttons, apply compact styling to reduce size
+      if (buttonCount >= 7) {
+        buttonsContainer.classList.add('compact');
+        // Calculate rows needed for 2-column layout
+        const rows = Math.ceil(buttonCount / 2);
+        buttonsContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+        buttonsContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+      } else {
+        buttonsContainer.classList.remove('compact');
+        // Keep original 2x2 layout for 4 or fewer buttons, or 2x3 for 5-6 buttons
+        if (buttonCount <= 4) {
+          buttonsContainer.style.gridTemplateRows = 'repeat(2, 1fr)';
+        } else {
+          buttonsContainer.style.gridTemplateRows = 'repeat(3, 1fr)';
+        }
+        buttonsContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+      }
+    }
+
+    function saveNewRideService(serviceName) {
+      // Get existing services from localStorage
+      let savedServices = JSON.parse(localStorage.getItem('customRideServices') || '[]');
+      
+      // Add new service
+      savedServices.push({ name: serviceName });
+      
+      // Save back to localStorage
+      localStorage.setItem('customRideServices', JSON.stringify(savedServices));
+    }
+
+    function loadSavedRideServices() {
+      // Get saved services from localStorage
+      const savedServices = JSON.parse(localStorage.getItem('customRideServices') || '[]');
+      
+      if (savedServices.length > 0) {
+        const buttonsContainer = document.querySelector('.buttons-ride');
+        
+        // Add each saved service as a button
+        savedServices.forEach(service => {
+          const newButton = document.createElement('button');
+          newButton.className = 'add-btn custom-ride';
+          newButton.onclick = () => addItem(service.name);
+          newButton.innerHTML = `
+            <span class="material-symbols-outlined">directions_car</span>
+            ${service.name}
+            <button class="delete-x" onclick="event.stopPropagation(); deleteCustomRide('${service.name}', this.parentElement);">✖</button>
+          `;
+          
+          // Add to the end
+          buttonsContainer.appendChild(newButton);
+        });
+        
+        // Update layout after loading all services
+        updateButtonLayout();
+      }
+    }
+  </script>
+
+  <!-- Emergency 911 Button - Always visible -->
+  <button class="emergency-911-btn" onclick="emergency911()">
+    <span class="material-icons">local_hospital</span>
+    Emergency 911
+  </button>
+
+  <!-- Add Ride Button - Top left corner -->
+  <button class="add-ride-btn" onclick="showAddRideModal()">
+    <span class="material-icons">add_road</span>
+    Add Ride
+  </button>
+
+  <!-- Emergency Modal -->
+  <div id="emergencyModal" class="emergency-modal" style="display: none;">
+    <div class="emergency-modal-content">
+      <div class="emergency-header">
+        <span class="material-icons emergency-icon">warning</span>
+        <h2>EMERGENCY CALL</h2>
+      </div>
+      <div class="emergency-body">
+        <p>This will call 911 emergency services immediately.</p>
+        <p><strong>Are you sure you want to continue?</strong></p>
+      </div>
+      <div class="emergency-actions">
+        <button class="emergency-btn confirm-btn" onclick="confirmEmergency()">
+          <span class="material-icons">phone</span>
+          YES - CALL 911 NOW
+        </button>
+        <button class="emergency-btn cancel-btn" onclick="closeEmergencyModal()">
+          <span class="material-icons">close</span>
+          CANCEL
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emergency Follow-up Modal -->
+  <div id="emergencyCallingModal" class="emergency-modal" style="display: none;">
+    <div class="emergency-modal-content calling-modal">
+      <div class="calling-animation">
+        <div class="phone-icon">
+          <span class="material-icons">phone_in_talk</span>
+        </div>
+        <h2 class="calling-text">Calling 911...</h2>
+        <div class="loading-dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+      <div class="emergency-actions">
+        <button class="emergency-btn confirm-btn" onclick="closeEmergencyModal()">
+          <span class="material-icons">check</span>
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+
+    </div>
+    <!-- Tablet frame elements -->
+    <div class="tablet-home-button"></div>
+    <div class="tablet-speaker tablet-speaker-top"></div>
+    <div class="tablet-speaker tablet-speaker-bottom"></div>
+    <div class="tablet-camera"></div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Update date and time display
+    function updateDateTime() {
+      const now = new Date();
+      const options = {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      };
+      const dateTimeString = now.toLocaleDateString('en-US', options);
+      document.getElementById('headerDateTime').textContent = dateTimeString;
+    }
+
+    // Update immediately and then every minute
+    updateDateTime();
+    setInterval(updateDateTime, 60000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grocery Service</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <style>
+    .quantity-modal .modal-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .quantity-selector {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      margin: 30px 0;
+      font-size: 2.5rem;
+    }
+
+    .quantity-btn {
+      font-size: 2.5rem;
+      /* padding: 0.5em 1em; */
+    }
+
+    #quantityValue {
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .modal button.ok-btn {
+      font-size: 1.5rem;
+      padding: 0.5em 1em;
+      margin-top: 10px;
+      margin-left: 11rem; 
+      background: linear-gradient(135deg, #2E5C8A, #4A7BB0);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .modal button.ok-btn:hover {
+      background: linear-gradient(135deg, #1A4A73, #2E5C8A);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(46, 92, 138, 0.6);
+    }
+
+    /* Category Items Modal Styles */
+    .category-items-content {
+      max-width: 600px;
+      width: 90%;
+    }
+
+    .items-table {
+      width: 100%;
+      margin: 20px 0;
+    }
+
+    .table-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 10px;
+      padding: 15px;
+      background:#a7ddff;
+      border-radius: 8px 8px 0 0;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .header-item, .header-quantity {
+      text-align: center;
+    }
+
+    .table-body {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 2px solid #97ccff;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 10px;
+      padding: 12px 15px;
+      border-bottom: 1px solid #e0e0e0;
+      align-items: center;
+    }
+
+    .table-row:last-child {
+      border-bottom: none;
+    }
+
+    .item-name {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .qty-btn {
+      width: 35px;
+      height: 35px;
+      border: 2px solid #2E5C8A;
+      background: rgb(220, 220, 220);
+      border-radius: 50%;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .qty-btn:hover {
+      background: #2E5C8A;
+      color: rgb(220, 220, 220);
+    }
+
+    .qty-btn.minus {
+      color: #d32f2f;
+      border-color: #d32f2f;
+    }
+
+    .qty-btn.minus:hover {
+      background: #d32f2f;
+      color: rgb(220, 220, 220);
+    }
+
+    .qty-btn.plus {
+      color: #1976d2;
+      border-color: #1976d2;
+    }
+
+    .qty-btn.plus:hover {
+      background: #1976d2;
+      color: rgb(220, 220, 220);
+    }
+
+    .qty-value {
+      font-size: 1.3rem;
+      font-weight: bold;
+      min-width: 30px;
+      text-align: center;
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: rgb(220, 220, 220);
+    }
+
+    /* Cart Summary Modal Styles */
+    .cart-summary-content {
+      max-width: 700px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .cart-header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #2E5C8A;
+    }
+
+    .cart-header h3 {
+      color: #2E5C8A;
+      font-size: 2.2rem; /* Increased from 1.5rem for seniors */
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .cart-date {
+      color: #000000;
+      font-size: 1.6rem; /* Increased from 1.1rem for seniors */
+      font-weight: bold;
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+
+    .cart-categories {
+      margin: 20px 0;
+    }
+
+    .cart-category {
+      background: rgb(220, 220, 220);
+      border-radius: 8px;
+      margin-bottom: 15px;
+      overflow: hidden;
+      border: 1px solid #e0e0e0;
+    }
+
+    .cart-category-header {
+      background: #2E5C8A;
+      color: rgb(220, 220, 220);
+      padding: 15px 20px; /* Increased padding for seniors */
+      font-weight: bold;
+      font-size: 1.6rem; /* Increased from 1.2rem for seniors */
+      line-height: 1.3;
+    }
+
+    .cart-category-items {
+      padding: 20px; /* Increased from 15px for better spacing */
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0; /* Increased from 8px for better spacing */
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item-name {
+      font-size: 1.5rem; /* Increased from 1.1rem for seniors */
+      color: #333;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .cart-item-quantity {
+      font-weight: bold;
+      color: #2E5C8A;
+      background: #E8F2FF;
+      padding: 8px 16px; /* Increased padding for better visibility */
+      border-radius: 20px;
+      font-size: 1.3rem; /* Increased from 1rem for seniors */
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .cart-total {
+      background: #E8F2FF;
+      padding: 20px; /* Increased from 15px for better spacing */
+      border-radius: 12px;
+      margin: 25px 0; /* Increased margin for better separation */
+      text-align: center;
+      border: 2px solid #2E5C8A; /* Thicker border for better visibility */
+    }
+
+    .cart-total-text {
+      font-size: 1.8rem; /* Increased from 1.3rem for seniors */
+      font-weight: bold;
+      color: #2E5C8A;
+      line-height: 1.3;
+    }
+
+    .cart-actions {
+      display: flex;
+      gap: 20px; /* Increased gap for better spacing */
+      justify-content: center;
+      margin-top: 25px; /* Increased margin */
+    }
+
+    .cart-btn {
+      padding: 18px 30px; /* Increased padding for better touch targets */
+      border: none;
+      border-radius: 12px; /* Larger radius for senior-friendly design */
+      font-size: 1.5rem; /* Increased from 1.2rem for seniors */
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 160px; /* Minimum width for consistent button sizes */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .cart-btn.confirm {
+      background: #1976d2;
+      color: rgb(220, 220, 220);
+    }
+
+    .cart-btn.confirm:hover {
+      background: #1565c0;
+    }
+
+    .cart-btn.edit {
+      background: #2E5C8A;
+      color: rgb(220, 220, 220);
+    }
+
+    .cart-btn.edit:hover {
+      background: #1A4A73;
+    }
+
+    .cart-btn.cancel {
+      background: #d32f2f;
+      color: rgb(220, 220, 220);
+    }
+
+    .cart-btn.cancel:hover {
+      background: #b71c1c;
+    }
+
+    /* Order Confirmation Modal Styles */
+    .confirmation-modal {
+      z-index: 1001;
+    }
+
+    .confirmation-content {
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      padding: 30px;
+      border-radius: 15px;
+      background: rgb(220, 220, 220);
+      border: 3px solid #1976d2;
+    }
+
+    .confirmation-icon {
+      font-size: 4rem;
+      color: #1976d2;
+      margin-bottom: 20px;
+      animation: checkmark-pulse 1.5s ease-in-out;
+    }
+
+    @keyframes checkmark-pulse {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .confirmation-title {
+      color: #2E5C8A;
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0 0 15px 0;
+    }
+
+    .confirmation-message {
+      color: #333;
+      font-size: 1.3rem;
+      margin: 15px 0 25px 0;
+      line-height: 1.5;
+    }
+
+    .confirmation-date {
+      background: #E8F2FF;
+      color: #2E5C8A;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin: 20px 0;
+      border: 2px solid #1976d2;
+    }
+
+    .confirmation-ok-btn {
+      background: #1976d2;
+      color: rgb(220, 220, 220);
+      border: none;
+      padding: 15px 40px;
+      border-radius: 25px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .confirmation-ok-btn:hover {
+      background: #1565c0;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(25, 118, 210, 0.4);
+    }
+
+    /* Modal positioning within tablet screen */
+    .tablet-screen .modal {
+      position: absolute !important;
+      top: 60px; /* Start below header menu */
+      left: 0;
+      width: 100%;
+      height: calc(100% - 60px); /* Exclude header height */
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
+    }
+
+    .tablet-screen .modal .modal-content {
+      margin-top: 0;
+      max-height: calc(100vh - 160px); /* Account for header and spacing */
+      overflow-y: auto;
+    }
+
+    /* Specific sizing for calendar modal to prevent header overlap */
+    .tablet-screen #calendarModal .modal-content {
+      max-width: 550px;
+      max-height: none;
+      height: auto;
+      padding: 40px 20px 20px 20px;
+      overflow-y: visible;
+    }
+
+    .tablet-screen #calendarModal .calendar-grid {
+      max-height: none;
+      overflow-y: visible;
+    }
+
+    /* Ensure header elements stay above modals */
+    .header-menu {
+      position: relative;
+      z-index: 10003 !important;
+    }
+
+    .header-back-button {
+      position: relative;
+      z-index: 1101 !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Android Tablet Frame -->
+  <div class="tablet-frame">
+    <div class="tablet-screen">
+      <!-- Header Menu -->
+      <header class="header-menu">
+        <div class="header-logo">
+          <img src="sosLogo.png" alt="Seniors On Support Logo" class="header-logo-image">
+          <!-- <span class="header-logo-text">Seniors On Support</span> -->
+        </div>
+        <h1 class="header-title">Grocery Service</h1>
+        <div class="header-datetime" id="headerDateTime"></div>
+        <button onclick="goBackToMainMenu()" class="header-back-button">← Back</button>
+      </header>
+
+  <!-- <h1 class="service-title">Grocery Service</h1> -->
+
+  <div class="container">
+    <div class="buttons-grocery">
+      <button class="add-btn" onclick="startAddItem('Milk')">
+        <span class="material-icons assist-btn-icon">local_drink</span>
+        Milk
+      </button>
+      <button class="add-btn" onclick="startAddItem('Bread')">
+        <span class="material-icons assist-btn-icon">bakery_dining</span>
+        Bread
+      </button>
+      <button class="add-btn" onclick="startAddItem('Eggs')">
+        <span class="material-icons assist-btn-icon">egg</span>
+        Eggs
+      </button>
+      <button class="add-btn" onclick="startAddItem('Painkillers')">
+        <span class="material-icons assist-btn-icon">medication</span>
+        Painkillers
+      </button>
+      <button class="add-btn" onclick="startAddItem('Vegetables')">
+        <span class="material-icons assist-btn-icon">eco</span>
+        Vegetables
+      </button>
+    </div>
+
+    <!-- <div class="cards" id="cards"></div> -->
+  </div>
+
+  <!-- Quantity Modal -->
+  <div class="modal quantity-modal" id="quantityModal" style="display:none">
+    <div class="modal-content">
+      <h3>How many <span id="itemName"></span>?</h3>
+      <div class="quantity-selector">
+        <button class="quantity-btn" onclick="adjustQuantity(-1)">–</button>
+        <div id="quantityValue">1</div>
+        <button class="quantity-btn" onclick="adjustQuantity(1)">+</button>
+      </div>
+      <button class="ok-btn" onclick="confirmQuantity()">OK</button>
+    </div>
+  </div>
+
+  <!-- Calendar Modal -->
+  <div class="modal" id="calendarModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal('calendarModal')">✖</button>
+      <h3 id="month-title"></h3>
+      <div class="calendar-grid" id="calendar-grid">
+        <div class="calendar-header">Mon</div>
+        <div class="calendar-header">Tue</div>
+        <div class="calendar-header">Wed</div>
+        <div class="calendar-header">Thu</div>
+        <div class="calendar-header">Fri</div>
+        <div class="calendar-header">Sat</div>
+        <div class="calendar-header">Sun</div>
+        <!-- Calendar cells will be dynamically generated here -->
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="timeModal" style="display:none">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal('timeModal')">✖</button>
+      <h3>Select a time for <span id="selectedDateDisplay"></span></h3>
+      <div class="time-grid" id="timeGrid"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    let currentCategory = "";
+    let selectedDate = "";
+    let selectedItems = [];
+    let cartItems = {}; // Store all cart items by date
+
+    // Categories with their items
+    const categoryItems = {
+      'Milk': ['Whole Milk', 'Skim Milk', 'Almond Milk', 'Oat Milk', 'Lactose-Free Milk'],
+      'Bread': ['White Bread', 'Whole Wheat Bread', 'Sourdough', 'Bagels', 'Croissants'],
+      'Eggs': ['Large Eggs', 'Medium Eggs', 'Free-Range Eggs', 'Organic Eggs', 'Duck Eggs'],
+      'Painkillers': ['Aspirin', 'Ibuprofen', 'Acetaminophen', 'Naproxen', 'Topical Pain Relief'],
+      'Vegetables': ['Carrots', 'Broccoli', 'Spinach', 'Tomatoes', 'Onions', 'Potatoes', 'Bell Peppers']
+    };
+
+    function startAddItem(category) {
+      currentCategory = category;
+      selectedItems = [];
+      // Show calendar first
+      generateCalendar(); // Generate calendar when modal opens
+      openCalendarModal();
+    }
+
+    function generateCalendar() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1; // getMonth() returns 0-11, we need 1-12
+      
+      // Month names for display
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+      
+      // Set month title
+      document.getElementById("month-title").textContent = `${monthNames[month - 1]} ${year}`;
+      
+      // Get first day of month and number of days
+      const firstDay = new Date(year, month - 1, 1);
+      const lastDay = new Date(year, month, 0);
+      const daysInMonth = lastDay.getDate();
+      
+      // Get day of week for first day (0 = Sunday, 1 = Monday, etc.)
+      // Convert to Monday = 0, Sunday = 6 for our calendar
+      let startDayOfWeek = firstDay.getDay();
+      startDayOfWeek = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1;
+      
+      // Get calendar grid container (skip the headers)
+      const calendarGrid = document.getElementById("calendar-grid");
+      
+      // Remove existing calendar cells (keep headers)
+      const existingCells = calendarGrid.querySelectorAll('.calendar-cell');
+      existingCells.forEach(cell => cell.remove());
+      
+      // Add empty cells for days before the first day of month
+      for (let i = 0; i < startDayOfWeek; i++) {
+        const emptyCell = document.createElement("div");
+        emptyCell.className = "calendar-cell empty";
+        calendarGrid.appendChild(emptyCell);
+      }
+      
+      // Add cells for each day of the month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayCell = document.createElement("div");
+        dayCell.className = "calendar-cell";
+        dayCell.textContent = day;
+        dayCell.onclick = () => selectDate(year, month, day);
+        calendarGrid.appendChild(dayCell);
+      }
+    }
+
+    function openCalendarModal() {
+      document.getElementById("calendarModal").style.display = "flex";
+    }
+
+    function selectDate(year, month, day) {
+      const m = String(month).padStart(2, '0');
+      const d = String(day).padStart(2, '0');
+      selectedDate = `${year}-${m}-${d}`;
+      
+      document.getElementById("calendarModal").style.display = "none";
+      // Show category items modal
+      openCategoryItemsModal();
+    }
+
+    function openCategoryItemsModal() {
+      // Create and show the category items modal
+      let modal = document.getElementById("categoryItemsModal");
+      if (!modal) {
+        modal = createCategoryItemsModal();
+      }
+      
+      // Populate the modal with category items
+      populateCategoryItems();
+      modal.style.display = "flex";
+    }
+
+    function createCategoryItemsModal() {
+      const modal = document.createElement("div");
+      modal.id = "categoryItemsModal";
+      modal.className = "modal";
+      modal.style.display = "none";
+      
+      modal.innerHTML = `
+        <div class="modal-content category-items-content">
+          <button class="close-btn" onclick="closeCategoryModal()">✖</button>
+          <h3>Select <span id="categoryName"></span> Items for ${selectedDate}</h3>
+          <div class="items-table">
+            <div class="table-header">
+              <div class="header-item">Items</div>
+              <div class="header-quantity">Quantity</div>
+            </div>
+            <div id="itemsTableBody" class="table-body">
+            </div>
+          </div>
+          <button class="ok-btn" onclick="showCartSummary()">Add to Cart</button>
+        </div>
+      `;
+      
+      document.querySelector('.tablet-screen').appendChild(modal);
+      return modal;
+    }
+
+    function populateCategoryItems() {
+      document.getElementById("categoryName").textContent = currentCategory;
+      const tableBody = document.getElementById("itemsTableBody");
+      tableBody.innerHTML = "";
+      
+      const items = categoryItems[currentCategory] || [];
+      
+      items.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "table-row";
+        row.innerHTML = `
+          <div class="item-name">${item}</div>
+          <div class="quantity-controls">
+            <button class="qty-btn minus" onclick="adjustItemQuantity(${index}, -1)">−</button>
+            <span class="qty-value" id="qty-${index}">0</span>
+            <button class="qty-btn plus" onclick="adjustItemQuantity(${index}, 1)">+</button>
+          </div>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function adjustItemQuantity(index, change) {
+      const qtyElement = document.getElementById(`qty-${index}`);
+      let currentQty = parseInt(qtyElement.textContent);
+      currentQty = Math.max(0, currentQty + change);
+      qtyElement.textContent = currentQty;
+    }
+
+    function confirmCategoryItems() {
+      const items = categoryItems[currentCategory] || [];
+      const selectedCategoryItems = [];
+      
+      items.forEach((item, index) => {
+        const qty = parseInt(document.getElementById(`qty-${index}`).textContent);
+        if (qty > 0) {
+          selectedCategoryItems.push({ item, qty });
+        }
+      });
+      
+      if (selectedCategoryItems.length > 0) {
+        // Store items in cart
+        if (!cartItems[selectedDate]) {
+          cartItems[selectedDate] = {};
+        }
+        cartItems[selectedDate][currentCategory] = selectedCategoryItems;
+        
+        // Create summary card
+        const card = document.createElement("div");
+        card.className = "card";
+        
+        const itemsList = selectedCategoryItems.map(({item, qty}) => `${item} (x${qty})`).join(', ');
+        card.innerHTML = `
+          <span>${currentCategory}: ${itemsList} — ${selectedDate}</span>
+          <button class="remove-btn" onclick="removeCardAndCartItem(this, '${selectedDate}', '${currentCategory}')">Remove</button>
+        `;
+        
+        document.getElementById("cards").appendChild(card);
+      }
+      
+      closeCategoryModal();
+    }
+
+    function removeCardAndCartItem(button, date, category) {
+      // Remove from cart
+      if (cartItems[date] && cartItems[date][category]) {
+        delete cartItems[date][category];
+        if (Object.keys(cartItems[date]).length === 0) {
+          delete cartItems[date];
+        }
+      }
+      // Remove card from UI
+      button.parentElement.remove();
+    }
+
+    function showCartSummary() {
+      const items = categoryItems[currentCategory] || [];
+      const selectedCategoryItems = [];
+      
+      items.forEach((item, index) => {
+        const qty = parseInt(document.getElementById(`qty-${index}`).textContent);
+        if (qty > 0) {
+          selectedCategoryItems.push({ item, qty });
+        }
+      });
+      
+      if (selectedCategoryItems.length > 0) {
+        // Store items in cart
+        if (!cartItems[selectedDate]) {
+          cartItems[selectedDate] = {};
+        }
+        cartItems[selectedDate][currentCategory] = selectedCategoryItems;
+      }
+      
+      // Close category modal and show cart summary
+      closeCategoryModal();
+      openCartSummaryModal();
+    }
+
+    function openCartSummaryModal() {
+      let modal = document.getElementById("cartSummaryModal");
+      if (!modal) {
+        modal = createCartSummaryModal();
+      }
+      
+      populateCartSummary();
+      modal.style.display = "flex";
+    }
+
+    function createCartSummaryModal() {
+      const modal = document.createElement("div");
+      modal.id = "cartSummaryModal";
+      modal.className = "modal";
+      modal.style.display = "none";
+      
+      modal.innerHTML = `
+        <div class="modal-content cart-summary-content">
+          <button class="close-btn" onclick="closeCartSummary()">✖</button>
+          <div class="cart-header">
+            <h3>🛒 Your Shopping Cart</h3>
+            <div class="cart-date" id="cartSummaryDate"></div>
+          </div>
+          <div id="cartSummaryContent" class="cart-categories">
+          </div>
+          <div class="cart-total">
+            <div class="cart-total-text" id="cartTotalItems">Total: 0 items</div>
+          </div>
+          <div class="cart-actions">
+            <button class="cart-btn confirm" onclick="confirmCartOrder()">
+              <span class="material-icons">shopping_cart_checkout</span>
+              Confirm Order
+            </button>
+            <button class="cart-btn edit" onclick="editCart()">
+              <span class="material-icons">edit</span>
+              Continue Shopping
+            </button>
+            <button class="cart-btn cancel" onclick="clearCart()">
+              <span class="material-icons">delete</span>
+              Clear Cart
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.querySelector('.tablet-screen').appendChild(modal);
+      return modal;
+    }
+
+    function populateCartSummary() {
+      const contentDiv = document.getElementById("cartSummaryContent");
+      const totalDiv = document.getElementById("cartTotalItems");
+      const dateDiv = document.getElementById("cartSummaryDate");
+      
+      contentDiv.innerHTML = "";
+      let totalItems = 0;
+      
+      // Show current date being worked on - format with month name
+      const [year, month, day] = selectedDate.split('-');
+      const dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      const formattedDate = dateObj.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      dateDiv.textContent = `Delivery Date: ${formattedDate}`;
+      
+      // Get current date's items
+      const dateItems = cartItems[selectedDate] || {};
+      
+      if (Object.keys(dateItems).length === 0) {
+        contentDiv.innerHTML = `
+          <div style="text-align: center; padding: 40px; color: #666;">
+            <span class="material-icons" style="font-size: 3rem; margin-bottom: 10px;">shopping_cart</span>
+            <p style="font-size: 1.8rem; margin: 20px 0; line-height: 1.4;">Your cart is empty</p>
+          </div>
+        `;
+      } else {
+        Object.entries(dateItems).forEach(([category, items]) => {
+          const categoryDiv = document.createElement("div");
+          categoryDiv.className = "cart-category";
+          
+          let categoryTotal = 0;
+          const itemsHTML = items.map(({item, qty}) => {
+            categoryTotal += qty;
+            totalItems += qty;
+            return `
+              <div class="cart-item">
+                <span class="cart-item-name">${item}</span>
+                <span class="cart-item-quantity">×${qty}</span>
+              </div>
+            `;
+          }).join('');
+          
+          categoryDiv.innerHTML = `
+            <div class="cart-category-header">
+              ${category} (${categoryTotal} items)
+            </div>
+            <div class="cart-category-items">
+              ${itemsHTML}
+            </div>
+          `;
+          
+          contentDiv.appendChild(categoryDiv);
+        });
+      }
+      
+      totalDiv.textContent = `Total: ${totalItems} items`;
+    }
+
+    function confirmCartOrder() {
+      // Add all cart items as cards to the main view
+      const dateItems = cartItems[selectedDate] || {};
+      
+      Object.entries(dateItems).forEach(([category, items]) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        
+        const itemsList = items.map(({item, qty}) => `${item} (x${qty})`).join(', ');
+        card.innerHTML = `
+          <span>${category}: ${itemsList} — ${selectedDate}</span>
+          <button class="remove-btn" onclick="removeCardAndCartItem(this, '${selectedDate}', '${category}')">Remove</button>
+        `;
+        
+        document.getElementById("cards").appendChild(card);
+      });
+      
+      closeCartSummary();
+      
+      // Show confirmation modal
+      showOrderConfirmation();
+    }
+
+    function showOrderConfirmation() {
+      let modal = document.getElementById("orderConfirmationModal");
+      if (!modal) {
+        modal = createOrderConfirmationModal();
+      }
+      
+      // Format the date nicely - parse the YYYY-MM-DD format correctly
+      const [year, month, day] = selectedDate.split('-');
+      const dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day)); // month is 0-based in Date constructor
+      
+      const formattedDate = dateObj.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      document.getElementById("confirmationDate").textContent = formattedDate;
+      modal.style.display = "flex";
+    }
+
+    function createOrderConfirmationModal() {
+      const modal = document.createElement("div");
+      modal.id = "orderConfirmationModal";
+      modal.className = "modal confirmation-modal";
+      modal.style.display = "none";
+      
+      modal.innerHTML = `
+        <div class="modal-content confirmation-content">
+          <div class="confirmation-icon">
+            <span class="material-icons" style="font-size: inherit;">check_circle</span>
+          </div>
+          <h2 class="confirmation-title">Order Confirmed!</h2>
+          <p class="confirmation-message">
+            Your grocery order has been successfully placed and will be delivered on:
+          </p>
+          <div class="confirmation-date" id="confirmationDate"></div>
+          <p class="confirmation-message">
+            🚚 You will receive a confirmation call and delivery updates.
+          </p>
+          <button class="confirmation-ok-btn" onclick="closeOrderConfirmation()">
+            <span class="material-icons" style="margin-right: 8px;">thumb_up</span>
+            Perfect!
+          </button>
+        </div>
+      `;
+      
+      document.querySelector('.tablet-screen').appendChild(modal);
+      return modal;
+    }
+
+    function closeOrderConfirmation() {
+      const modal = document.getElementById("orderConfirmationModal");
+      if (modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    function editCart() {
+      closeCartSummary();
+      // Could reopen category modal or return to main view
+    }
+
+    function clearCart() {
+      showClearCartConfirmation();
+    }
+
+    function showClearCartConfirmation() {
+      let modal = document.getElementById("clearCartModal");
+      if (!modal) {
+        modal = createClearCartModal();
+      }
+      modal.style.display = "flex";
+    }
+
+    function createClearCartModal() {
+      const modal = document.createElement("div");
+      modal.id = "clearCartModal";
+      modal.className = "modal";
+      modal.style.display = "none";
+      
+      modal.innerHTML = `
+        <div class="modal-content confirmation-content" style="max-width: 450px;">
+          <div class="confirmation-icon" style="color: #d32f2f;">
+            <span class="material-icons" style="font-size: inherit;">warning</span>
+          </div>
+          <h2 class="confirmation-title" style="color: #d32f2f;">Clear Cart?</h2>
+          <p class="confirmation-message">
+            Are you sure you want to clear your cart? This will remove all items and cannot be undone.
+          </p>
+          <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+            <button class="cart-btn cancel" onclick="confirmClearCart()" style="padding: 12px 30px;">
+              <span class="material-icons" style="margin-right: 8px;">delete</span>
+              Yes, Clear Cart
+            </button>
+            <button class="cart-btn edit" onclick="closeClearCartModal()" style="padding: 12px 30px;">
+              <span class="material-icons" style="margin-right: 8px;">cancel</span>
+              Cancel
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.querySelector('.tablet-screen').appendChild(modal);
+      return modal;
+    }
+
+    function confirmClearCart() {
+      if (cartItems[selectedDate]) {
+        delete cartItems[selectedDate];
+      }
+      populateCartSummary(); // Refresh the display
+      closeClearCartModal();
+    }
+
+    function closeClearCartModal() {
+      const modal = document.getElementById("clearCartModal");
+      if (modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    function closeCartSummary() {
+      const modal = document.getElementById("cartSummaryModal");
+      if (modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    function closeCategoryModal() {
+      const modal = document.getElementById("categoryItemsModal");
+      if (modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    function goBackToMainMenu() {
+      // Close all static modals
+      const staticModals = ['quantityModal', 'calendarModal', 'timeModal', 'emergencyModal', 'emergencyCallingModal'];
+      staticModals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.style.display = "none";
+        }
+      });
+
+      // Close all dynamically created modals
+      const dynamicModals = ['categoryItemsModal', 'cartSummaryModal', 'orderConfirmationModal', 'clearCartModal'];
+      dynamicModals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.style.display = "none";
+        }
+      });
+
+      // Clear any ongoing processes or timers if needed
+      // Reset any global variables to initial state
+      currentCategory = "";
+      selectedDate = "";
+      selectedItems = [];
+
+      // Navigate to main menu after a brief delay to ensure modals are closed
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 100);
+    }
+  </script>
+
+  <!-- Emergency 911 Button - Always visible -->
+  <button class="emergency-911-btn" onclick="emergency911()">
+    <span class="material-icons">local_hospital</span>
+    Emergency 911
+  </button>
+
+  <!-- Emergency Modal -->
+  <div id="emergencyModal" class="emergency-modal" style="display: none;">
+    <div class="emergency-modal-content">
+      <div class="emergency-header">
+        <span class="material-icons emergency-icon">warning</span>
+        <h2>EMERGENCY CALL</h2>
+      </div>
+      <div class="emergency-body">
+        <p>This will call 911 emergency services immediately.</p>
+        <p><strong>Are you sure you want to continue?</strong></p>
+      </div>
+      <div class="emergency-actions">
+        <button class="emergency-btn confirm-btn" onclick="confirmEmergency()">
+          <span class="material-icons">phone</span>
+          YES - CALL 911 NOW
+        </button>
+        <button class="emergency-btn cancel-btn" onclick="closeEmergencyModal()">
+          <span class="material-icons">close</span>
+          CANCEL
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emergency Follow-up Modal -->
+  <div id="emergencyCallingModal" class="emergency-modal" style="display: none;">
+    <div class="emergency-modal-content calling-modal">
+      <div class="calling-animation">
+        <div class="phone-icon">
+          <span class="material-icons">phone_in_talk</span>
+        </div>
+        <h2 class="calling-text">Calling 911...</h2>
+        <div class="loading-dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+      <div class="emergency-actions">
+        <button class="emergency-btn confirm-btn" onclick="closeEmergencyModal()">
+          <span class="material-icons">check</span>
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+
+    </div>
+    <!-- Tablet frame elements -->
+    <div class="tablet-home-button"></div>
+    <div class="tablet-speaker tablet-speaker-top"></div>
+    <div class="tablet-speaker tablet-speaker-bottom"></div>
+    <div class="tablet-camera"></div>
+  </div>
+  <script>
+    // Update date and time display
+    function updateDateTime() {
+      const now = new Date();
+      const options = {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      };
+      const dateTimeString = now.toLocaleDateString('en-US', options);
+      document.getElementById('headerDateTime').textContent = dateTimeString;
+    }
+
+    // Update immediately and then every minute
+    updateDateTime();
+    setInterval(updateDateTime, 60000);
+  </script>
+</body>
+</html>

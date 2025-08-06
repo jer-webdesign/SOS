@@ -1,0 +1,2334 @@
+/* Base styles for mobile-first approach */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  /* Senior-optimized font stack for maximum readability */
+  font-family: 'Inter', 'Open Sans', 'Source Sans Pro', 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(225deg, 
+    #164485 0%,     /* Deep navy blue */
+    #3B5A87 25%,    /* Medium blue */
+    #4A6B9A 50%,    /* Lighter blue */
+    #5A7CAE 75%,    /* Even lighter blue */
+    #5888d1 100%);  /* Light blue */
+  background-attachment: fixed;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* Android Tablet Frame Styles */
+.tablet-frame {
+  width: 100vw;
+  height: 100vh;
+  background: #2c2c2c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 40px;
+  padding: 60px 60px;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+}
+
+.tablet-screen {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(225deg, 
+    #164485 0%,     /* Deep navy blue */
+    #3B5A87 25%,    /* Medium blue */
+    #4A6B9A 50%,    /* Lighter blue */
+    #5A7CAE 75%,    /* Even lighter blue */
+    #5888d1 100%);  /* Light blue */
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+  z-index: 10001;
+}
+
+.tablet-home-button {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 12px;
+  background: #1a1a1a;
+  border-radius: 6px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.tablet-speaker {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 6px;
+  background: #1a1a1a;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.tablet-speaker-top {
+  top: 20px;
+}
+
+.tablet-speaker-bottom {
+  bottom: 20px;
+}
+
+.tablet-camera {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  width: 10px;
+  height: 10px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Adjust body background when using tablet frame */
+body {
+  background: #ffffff;
+}
+
+
+/* Tablet frame specific adjustments */
+.tablet-screen .header-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  border-radius: 15px 15px 0 0;
+}
+
+.tablet-screen .emergency-911-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  /* Keep all other styles the same */
+}
+
+/* Header Menu Layout */
+.header-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #334F8A;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  z-index: 10002;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 15px 15px 0 0;
+}
+
+.header-logo {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-logo-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.header-logo-text {
+  font-size: 1rem;
+  color: #FFFFFF;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  line-height: 1;
+}
+
+.header-title {
+  flex: 1;
+  text-align: center;
+  color: #FFFFFF;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  padding-right: 2rem; /* Reduced padding to give more space for title */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  /* Removed overflow and text-overflow to ensure full text display */
+  white-space: nowrap;
+  min-width: 0; /* Allow flex item to shrink */
+}
+
+.header-back-button {
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid #FFFFFF;
+  border-radius: 25px;
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.header-back-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.header-back-button:active {
+  transform: scale(0.95);
+}
+
+.header-spacer {
+  flex: 0 0 auto;
+  width: 50px; /* Match logo image width for perfect center alignment */
+}
+
+.header-datetime {
+  flex: 0 0 auto;
+  color: #FFFFFF;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: right;
+  line-height: 1.2;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  min-width: 100px;
+  margin-right: 15px;
+}
+
+/* Responsive tablet frame - hide on actual mobile devices */
+@media (max-width: 768px) {
+  .tablet-frame {
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+  
+  .tablet-screen {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  .tablet-screen .emergency-911-btn {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .tablet-home-button,
+  .tablet-speaker,
+  .tablet-camera {
+    display: none;
+  }
+  
+  body {
+    background: linear-gradient(225deg, 
+      #164485 0%,     /* Deep navy blue */
+      #3B5A87 25%,    /* Medium blue */
+      #4A6B9A 50%,    /* Lighter blue */
+      #5A7CAE 75%,    /* Even lighter blue */
+      #5888d1 100%);  /* Light blue */
+  }
+}
+
+/* Responsive header menu adjustments */
+@media (max-width: 1300px) {
+  .header-datetime {
+    display: none; /* Hide date/time to prevent overlap with title */
+  }
+  
+  .header-title {
+    position: absolute; /* Absolute positioning for perfect centering */
+    left: 50%; /* Move to center */
+    transform: translateX(-50%); /* Center the element */
+    padding-right: 0; /* Remove right padding for better centering */
+    text-align: center; /* Ensure center alignment */
+    width: auto; /* Auto width for content */
+    flex: none; /* Remove flex behavior */
+  }
+}
+
+@media (max-width: 1106px) {
+  .header-title {
+    position: absolute; /* Absolute positioning for perfect centering */
+    left: 50%; /* Move to center */
+    transform: translateX(-50%); /* Center the element */
+    font-size: 1rem; /* Slightly smaller font to fit better */
+    padding-right: 0; /* Remove padding for better centering */
+    min-width: 160px; /* Ensure minimum width for "Seniors On Support" */
+    text-align: center; /* Ensure center alignment */
+    width: auto; /* Auto width for content */
+    flex: none; /* Remove flex behavior */
+  }
+  
+  .header-datetime {
+    min-width: 80px; /* Reduce datetime width to give more space to title */
+    font-size: 0.7rem;
+    display: none; /* Also hide at this breakpoint */
+  }
+  
+  .header-spacer {
+    width: 40px; /* Reduce spacer width */
+  }
+}
+
+@media (min-width: 481px) {
+  .header-menu {
+    /* height: 90px; */
+    padding: 0 30px;
+  }
+  
+  .header-logo-image {
+    width: 30%;
+    height: auto;
+  }
+  
+  .header-logo-text {
+    font-size: 0.75rem;
+  }
+  
+  .header-title {
+    font-size: 1.75rem;
+  }
+  
+  .header-back-button {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+  }
+  
+  .header-spacer {
+    width: 60px;
+  }
+  
+  .header-datetime {
+    font-size: 1rem;
+    min-width: 130px;
+  }
+}
+
+@media (min-width: 769px) {
+  .header-menu {
+    /* height: 100px; */
+    padding: 0 40px;
+  }
+  
+  .header-logo-image {
+    width: 30%;
+    height: auto;
+  }
+  
+  .header-logo-text {
+    font-size: 0.8rem;
+  }
+  
+  .header-title {
+    font-size: 2rem;
+  }
+  
+  .header-back-button {
+    font-size: 1.2rem;
+    padding: 12px 24px;
+  }
+  
+  .header-spacer {
+    width: 70px;
+  }
+  
+  .header-datetime {
+    font-size: 1.1rem;
+    min-width: 140px;
+  }
+}
+
+/* Brand Header and Logo */
+.brand-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 15px 20px;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 3px solid #FFFFFF;
+  overflow: hidden;
+}
+
+.logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.logo .material-icons {
+  font-size: 32px;
+  color: #FFFFFF;
+}
+
+.brand-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  max-width: 100px;
+}
+
+/* Responsive brand header adjustments */
+@media (min-width: 769px) {
+  .brand-header {
+    padding: 20px 30px;
+  }
+  
+  .logo {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .logo-image {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .logo .material-icons {
+    font-size: 36px;
+  }
+  
+  .brand-text {
+    font-size: 16px;
+    max-width: 120px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .logo {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .logo-image {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .logo .material-icons {
+    font-size: 40px;
+  }
+  
+  .brand-text {
+    font-size: 18px;
+    max-width: 140px;
+  }
+}
+
+/* Main container - Mobile first */
+.container {
+  min-height: 100vh;
+  /* min-width: 100%; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  width: 100%;
+  padding-top: 80px; /* Add space for header menu */
+}
+
+/* Grid layout - Mobile (1 column) */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px 0;
+}
+
+/* Service buttons - Mobile */
+button.opt-button {
+  width: 100%;
+  height: 140px; /* Increased from 120px for better accessibility */
+  font-size: 1.8rem; /* Slightly smaller to balance with new icon size */
+  background-color: #2E5C8A; /* Darker blue for better contrast */
+  color: #FFFFFF; /* Pure white for maximum contrast */
+  border: 3px solid #1A4A73; /* Thicker, darker border */
+  border-radius: 20px; /* Less rounded for clearer boundaries */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Slightly slower transition */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Stronger shadow */
+  touch-action: manipulation;
+  font-weight: 600; /* Semi-bold for better readability */
+  letter-spacing: 0.5px; /* Slight letter spacing */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px; /* Reduced gap for closer positioning */
+  padding: 12px; /* Add padding for better spacing */
+}
+
+button.opt-button:hover {
+  background-color: #4A7BB0; /* Warmer blue on hover */
+  transform: translateY(-3px); /* More pronounced lift */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+  border-color: #275380;
+}
+
+button.opt-button:active {
+  transform: translateY(-1px); /* Less depression for seniors */
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+button.opt-button:focus {
+  outline: 4px solid #c8e8fa; /* Gold focus ring - highly visible */
+  outline-offset: 2px;
+}
+
+span.material-symbols-outlined {
+  font-size: 3rem;
+  flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Senior-friendly emoji icons */
+span.service-emoji {
+  font-size: 3.5rem; /* Larger for better visibility */
+  flex-shrink: 0;
+  line-height: 1;
+  display: block;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); /* Subtle shadow for depth */
+}
+
+/* Senior-friendly Material-UI icons with Apple-style rounded square styling */
+.material-icons.senior-icon {
+  font-size: 5rem !important; /* Increased from 3.2rem for better visibility */
+  flex-shrink: 0;
+  line-height: 1;
+  display: block;
+  margin-bottom: -10px; /* Much closer to label */
+  margin-top: 10px; /* Increased top margin for more space above icons */
+  padding: 20px; 
+  border-radius: 22px; /* Apple-style rounded square (about 25% of total size) */
+  /* box-shadow: 0 4px 12px rgba(0,0,0,0.15); */
+  transition: all 0.3s ease;
+  width: 55px; /* Fixed width for consistent square shape */
+  height: 55px; /* Fixed height for consistent square shape */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.material-icons.assist-btn-icon {
+  font-size: 5rem !important; /* Increased from 3.2rem for better visibility */
+  flex-shrink: 0;
+  line-height: 1;
+  display: block;
+  margin-bottom: -15px; /* Much closer to label */
+  margin-top: 10px; /* Increased top margin for more space above icons */
+  padding: 20px; 
+  border-radius: 22px; /* Apple-style rounded square (about 25% of total size) */
+  /* box-shadow: 0 4px 12px rgba(0,0,0,0.15); */
+  transition: all 0.3s ease;
+  width: 64px; /* Fixed width for consistent square shape */
+  height: 64px; /* Fixed height for consistent square shape */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Individual icon colors - Smart Home System Panel aesthetic */
+.call-icon {
+  /* background: linear-gradient(135deg, #2E5C8A 0%, #4A7BB0 100%);  */
+  color: #FFFFFF;
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
+}
+
+.grocery-icon {
+  /* background: linear-gradient(135deg, #2E5C8A 0%, #4A7BB0 100%);  */
+  color: #FFFFFF;
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
+}
+
+.assist-icon {
+  /* background: linear-gradient(135deg, #2E5C8A 0%, #4A7BB0 100%);  */
+  color: #FFFFFF;
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
+}
+
+.chores-icon {
+  /* background: linear-gradient(135deg, #2E5C8A 0%, #4A7BB0 100%);  */
+  color: #FFFFFF;
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
+}
+
+.visit-icon {
+  /* background: linear-gradient(135deg, #2E5C8A 0%, #4A7BB0 100%);  */
+  color: #FFFFFF;
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
+}
+
+.ride-icon {
+  /* background: linear-gradient(135deg, #2E5C8A 0%, #4A7BB0 100%);  */
+  color: #FFFFFF;
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
+}
+
+/* Hover effects for smart home panel icons */
+button.opt-button:hover .senior-icon {
+  transform: scale(1.1);
+  /* box-shadow: 0 8px 25px rgba(232, 244, 253, 0.3); */
+  /* border: 1px solid rgba(232, 244, 253, 0.4); */
+}
+
+/* Service pages layout */
+h1 {
+  text-align: center;
+  margin: 10px 0 20px 0;
+  font-size: 1.5rem;
+}
+
+h1.service-title {
+  background-color: #4682B4; /*#1976d2;*/
+  margin: 0;
+  text-align: center;
+  color: rgb(220, 220, 220);/*#FFF;*/
+  padding: 15px;
+  font-size: 1.3rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Back button - Mobile */
+.back-button {
+  position: fixed;
+  top: 10px;
+  left: 15px;
+  color: #FFFFFF;
+  background: #2E5C8A; /* Consistent with main buttons */
+  padding: 12px 20px; /* Larger for seniors */
+  border: 2px solid #1A4A73;
+  border-radius: 12px;
+  font-size: 1rem; /* Larger text */
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  touch-action: manipulation;
+}
+
+.back-button:hover {
+  background: #4A7BB0; /* Consistent hover color */
+  border-color: #2E5C8A;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+/* Service page container */
+.container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Action buttons container */
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto 50px auto;
+  padding: 0 25px;
+  justify-content: center;
+  place-items: center;
+}
+
+/* Assist service buttons container - custom styling */
+.buttons-assist {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 80px auto;
+  padding: 0 25px;
+  justify-content: center;
+  place-items: center;
+}
+
+/* Call service buttons container - custom styling */
+.buttons-call {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 80px auto;
+  padding: 0 25px;
+  justify-content: center;
+  place-items: center;
+}
+
+/* Scrollable container for call buttons */
+.buttons-call-container {
+  width: 100%;
+  max-height: none;
+  overflow-y: visible;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Custom scrollbar styling for better senior accessibility */
+.buttons-call-container::-webkit-scrollbar {
+  width: 12px;
+}
+
+.buttons-call-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.buttons-call-container::-webkit-scrollbar-thumb {
+  background: rgba(46, 92, 138, 0.8);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.buttons-call-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(46, 92, 138, 1);
+}
+
+/* Visit service buttons container - custom styling */
+.buttons-visit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto 50px auto;
+  padding: 0 25px;
+  justify-content: center;
+  place-items: center;
+}
+
+/* Grocery service buttons container - custom styling */
+.buttons-grocery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto 50px auto;
+  padding: 0 25px;
+  justify-content: center;
+  place-items: center;
+}
+
+/* Ride service buttons container - custom styling */
+.buttons-ride {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 80px auto;
+  padding: 0 25px;
+  justify-content: center;
+  place-items: center;
+}
+
+/* Action buttons - Matching opt-button styling exactly */
+.add-btn {
+  width: 90%;
+  height: 145px;
+  font-size: 3.2rem;
+  padding: 0 25px;
+  gap: 20px;
+  border-radius: 50px;
+  background-color: #2E5C8A; /* Darker blue for better contrast */
+  color: #FFFFFF; /* Pure white for maximum contrast */
+  border: 3px solid #1A4A73; /* Thicker, darker border */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Slightly slower transition */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Stronger shadow */
+  touch-action: manipulation;
+  font-weight: 600; /* Semi-bold for better readability */
+  letter-spacing: 0.5px; /* Slight letter spacing */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-btn:hover {
+  background-color: #4A7BB0; /* Warmer blue on hover */
+  transform: translateY(-3px); /* More pronounced lift */
+  box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+  border-color: #275380;
+}
+
+.add-btn:active {
+  transform: translateY(-1px); /* Less depression for seniors */
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.add-btn:focus {
+  outline: 4px solid #c8e8fa; /* Gold focus ring - highly visible */
+  outline-offset: 2px;
+}
+
+/* Icons for assist service buttons */
+.assist-btn-icon {
+  font-size: 4.5rem !important;
+  margin-top: 1rem;
+  /* margin-bottom: -1rem; */
+  opacity: 0.9;
+}
+
+.add-btn:hover {
+  background: #4A7BB0; /* Consistent hover color */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(0,0,0,0.2);
+  border-color: #2E5C8A;
+}
+
+/* .add-btn:focus {
+  outline: 3px solid #FFD700; 
+  outline-offset: 2px;
+} */
+
+/* Cards container */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 600px;
+  padding: 0 10px;
+}
+
+/* Individual cards */
+.card {
+  background: rgb(220, 220, 220);/*white;*/
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+  gap: 10px;
+  flex-wrap: wrap;
+  border: 1px solid #e0e0e0;
+}
+
+.card span {
+  flex: 1;
+  min-width: 200px;
+  word-wrap: break-word;
+}
+
+.remove-btn {
+  background: #e53935;
+  color: rgb(220, 220, 220);/*white;*/
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+
+/* Modal styles - Mobile first */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  z-index: 9999;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background: rgb(215 242 255);/*white;*/
+  padding: 60px 20px 20px 20px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  max-height: calc(100vh - 40px);
+  margin-top: 20px;
+  position: relative;
+  overflow-y: auto;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: #f04242;
+  border: none;
+  border-radius: 2rem;
+  padding: 8px 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  touch-action: manipulation;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: #dc2626;
+  color: rgb(255, 255, 255);
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.5);
+}
+
+/* Calendar grid - Mobile */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  text-align: center;
+  margin-top: 20px;
+  max-width: 100%;
+}
+
+.calendar-header {
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding: 12px 4px;
+}
+
+.calendar-cell {
+  width: 100%;
+  aspect-ratio: 1; /* Keeps cells square */
+  min-height: 45px;
+  font-size: 1rem;  
+  background: #bde2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border: 2px solid transparent;
+  touch-action: manipulation;
+}
+
+.calendar-cell:hover {
+  background: #E8F2FF; /* Light blue consistent with theme */
+  border-color: #2E5C8A; /* Consistent with main buttons */
+  box-shadow: 0 2px 6px rgba(46, 92, 138, 0.2);
+}
+
+.calendar-cell.empty {
+  background: transparent;
+  box-shadow: none;
+  cursor: default;
+}
+
+/* Time grid - Mobile */
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.time-button {
+  background: #2E5C8A; /* Consistent with main buttons */
+  color: #FFFFFF;
+  padding: 18px 15px; /* More generous padding */
+  border: 2px solid #1A4A73;
+  border-radius: 12px;
+  font-size: 1.1rem; /* Larger text */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  touch-action: manipulation;
+  min-height: 60px; /* Ensure adequate touch target */
+}
+
+.time-button:hover {
+  background: #4A7BB0; /* Consistent hover color */
+  border-color: #2E5C8A;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+/* Month title */
+#month-title {
+  background-color: #1976d2;
+  padding: 15px;
+  text-align: center;
+  color: rgb(220, 220, 220); /*#FFF;*/
+  border-radius: 12px;
+  margin: 0 0 20px 0;
+  font-size: 1.6rem;
+  margin-top: 1.3rem;
+  clear: both;
+}
+
+/* Quantity selector styles */
+.quantity-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quantity-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin: 30px 0;
+  font-size: 2rem;
+}
+
+.quantity-btn {
+  font-size: 3rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  border: none;
+  background-color: #f5f5f5;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+.quantity-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.quantity-btn:active {
+  background-color: #d0d0d0;
+}
+
+#quantityValue {
+  min-width: 60px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.modal button.ok-btn {
+  font-size: 1.2rem;
+  padding: 12px 24px;
+  margin-top: 20px;
+  background: #1976d2;
+  color: rgb(220, 220, 220);/*white;*/
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Small mobile devices (320px - 480px) */
+@media (max-width: 480px) {
+  /* Reduce tablet frame padding for smaller screens */
+  .tablet-frame {
+    padding: 20px 20px; /* Reduced from 60px */
+    border-radius: 25px; /* Slightly smaller radius */
+  }
+  
+  .tablet-screen {
+    border-radius: 10px; /* Slightly smaller radius */
+  }
+  
+  /* Adjust container for 2x3 grid mobile layout */
+  .container {
+    padding: 8px;
+    padding-top: 75px; /* Adequate space for header */
+    display: flex;
+    align-items: flex-start; /* Align to top for better layout */
+    justify-content: center;
+    min-height: calc(100vh - 75px); /* Ensure proper height */
+  }
+  
+  /* Reduce grid size and spacing - 2 columns, 3 rows for mobile */
+  .grid {
+    display: grid;
+    /* grid-template-columns: 1fr 1fr 1fr; */
+    grid-template-rows: 1fr 1fr; 
+    gap: 10px; /* Reduced from 15px */
+    max-width: 100%;
+    padding: 10px 0; /* Reduced from 20px */
+    margin-top: 4rem;
+    width: 60%;
+    border-radius: 50px;
+  }
+  
+  /* Adjust main service buttons for 2x3 grid on mobile */
+  button.opt-button {
+    height: 90px; /* Optimized for 2x3 grid */
+    font-size: 1.3rem; /* Slightly smaller for better fit */
+    padding: 6px 8px; /* Tighter padding */
+    gap: 6px; /* Smaller gap between icon and text */
+    border-radius: 40px;
+    width: 100%; /* Ensure full width within grid cell */
+  }
+  
+  /* Adjust icons for 2x3 grid layout */
+  .material-icons.senior-icon {
+    font-size: 2rem !important; /* Further reduced for 2x3 grid */
+    width: 45px; /* Smaller for tighter layout */
+    height: 45px; /* Smaller for tighter layout */
+    padding: 12px; /* Reduced padding */
+    margin-bottom: -15px; /* Tighter spacing */
+    margin-top: 3px; /* Minimal top margin */
+    border-radius: 14px; /* Proportionally smaller */
+  }
+  
+  /* Adjust header for smaller screens */
+  .header-menu {
+    height: 60px; /* Reduced from default */
+    padding: 8px 15px; /* Reduced padding */
+  }
+  
+  .header-title {
+    font-size: 1rem; /* Set to 1rem as requested */
+  }
+  
+  .header-logo-image {
+    height: 20px; /* Set to 20px as requested */
+    width: 100%;
+  }
+  
+  .header-datetime {
+    font-size: 0.8rem; /* Smaller datetime */
+  }
+  
+  .header-back-button {
+    font-size: 0.9rem; /* Smaller back button */
+    padding: 6px 12px; /* Reduced padding */
+  }
+  
+  /* Emergency button adjustments - centered */
+  .emergency-911-btn {
+    bottom: 15px !important; /* Closer to bottom */
+    left: 50% !important; /* Center horizontally */
+    right: auto !important; /* Remove right positioning */
+    transform: translateX(-50%) !important; /* Center with transform */
+    padding: 12px 16px !important; /* Smaller padding */
+    font-size: 1.2rem !important; /* Smaller font */
+    border-radius: 20px !important; /* Smaller radius */
+  }
+  
+  .emergency-911-btn .material-icons {
+    font-size: 1.4rem !important; /* Smaller icon */
+  }
+
+  /* Adjust service button containers for mobile */
+  .buttons {
+    grid-template-columns: 1fr 1fr; /* Keep 2 columns */
+    gap: 10px; /* Reduced gap */
+    max-width: 100%;
+    padding: 0 5px;
+    margin-bottom: 30px; /* Reduced margin */
+  }
+  
+  .buttons-assist {
+    grid-template-columns: 1fr 1fr; /* Change from 3 to 2 columns for mobile */
+    gap: 10px;
+    max-width: 100%;
+    padding: 0 5px;
+    margin-bottom: 30px;
+  }
+  
+  .buttons-call {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 100%;
+    padding: 0 5px;
+    margin-bottom: 30px;
+  }
+  
+  .buttons-visit {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 100%;
+    padding: 0 5px;
+    margin-bottom: 30px;
+  }
+  
+  .buttons-grocery {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 100%;
+    padding: 0 5px;
+    margin-bottom: 30px;
+  }
+  
+  .buttons-ride {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 100%;
+    padding: 0 5px;
+    margin-bottom: 30px;
+  }
+  
+  .cards {
+    padding: 0 5px;
+  }
+  
+  .card {
+    padding: 12px;
+    font-size: 2rem;
+  }
+  
+  .card span {
+    min-width: 150px;
+  }
+  
+  .time-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    padding: 15px;
+    margin-top: 10px;
+  }
+  
+  /* Adjust service page buttons for mobile 2-column layout */
+  .add-btn {
+    height: 100px; /* Reduced from 145px for mobile */
+    font-size: 1.8rem; /* Reduced from 3.2rem */
+    padding: 8px 12px; /* Reduced padding */
+    gap: 8px; /* Reduced gap */
+    border-radius: 25px; /* Smaller radius */
+    width: 100%; /* Ensure full width in grid cell */
+  }
+  
+  /* Adjust service button icons */
+  .assist-btn-icon {
+    font-size: 2.8rem !important; /* Reduced for better fit */
+  }
+  
+  /* Adjust "Add [Service]" buttons for smaller screens */
+  .add-visit-btn,
+  .add-call-btn,
+  .add-assist-btn,
+  .add-chore-btn,
+  .add-ride-btn,
+  .add-grocery-btn {
+    top: 80px !important; /* Closer to header */
+    left: 15px !important; /* Closer to edge */
+    padding: 10px 15px !important; /* Smaller padding */
+    font-size: 1.2rem !important; /* Smaller font */
+    border-radius: 20px !important; /* Smaller radius */
+    gap: 6px !important; /* Smaller gap */
+  }
+  
+  .add-visit-btn .material-icons,
+  .add-call-btn .material-icons,
+  .add-assist-btn .material-icons,
+  .add-chore-btn .material-icons,
+  .add-ride-btn .material-icons,
+  .add-grocery-btn .material-icons {
+    font-size: 1rem !important; /* Smaller icons */
+  }
+  
+  /* Fix call service specific elements for mobile */
+  .buttons-call-container {
+    margin-top: 10px !important; /* Reduced top margin */
+    margin-bottom: 80px !important; /* Reduced bottom margin */
+    padding: 10px 0 !important; /* Smaller padding */
+    margin-left: -90px !important; /* Move buttons left to align with volume control */
+    padding-left: 0px !important; /* Add left padding for proper spacing */
+  }
+  
+  .buttons-call {
+    gap: 1.5rem !important; /* Set gap to 1.5rem as requested */
+    padding: 0 5px !important; /* Add side padding */
+  }
+  
+  .buttons-call .add-btn {
+    height: 90px !important; /* Smaller height for mobile */
+    font-size: 1rem !important; /* Reduced text size to 1rem */
+    padding: 8px 12px !important; /* Tighter padding */
+  }
+  
+  /* Make call button icons smaller */
+  .buttons-call .add-btn .assist-btn-icon {
+    font-size: 2.2rem !important; /* Smaller icons for call buttons */
+  }
+  
+  /* Volume control positioning for mobile */
+  .volume-control {
+    right: 10px !important; /* Closer to edge */
+    top: 45% !important; /* Slightly higher position */
+    padding: 15px 10px !important; /* Smaller padding */
+    border-radius: 20px !important; /* Smaller radius */
+  }
+  
+  .volume-slider-container {
+    width: 40px !important; /* Narrower container */
+  }
+  
+  .volume-slider {
+    width: 150px !important; /* Shorter slider */
+  }
+  
+  .volume-slider::-webkit-slider-track {
+    width: 200px !important; /* Shorter track */
+    height: 80px !important; /* Thinner track */
+  }
+  
+  .volume-slider::-webkit-slider-thumb {
+    width: 80px !important; /* Smaller thumb */
+    height: 80px !important;
+  }
+  
+  .volume-slider::-moz-range-track {
+    width: 200px !important;
+    height: 80px !important;
+  }
+  
+  .volume-slider::-moz-range-thumb {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  
+  .volume-icon {
+    font-size: 24px !important; /* Smaller icon */
+  }
+  
+  .volume-level {
+    font-size: 14px !important; /* Smaller text */
+  }
+  
+  span.material-symbols-outlined {
+    font-size: 2.1rem;
+  }
+}
+
+/* Tablet styles (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .container {
+    padding: 15px;
+    padding-top: 110px; /* Adjust for header menu */
+  }
+  
+  /* Grid layout - Small tablet (2 columns) */
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    max-width: 500px;
+  }
+  
+  button.opt-button {
+    height: 130px;
+    font-size: 2rem;
+    padding: 0 20px;
+    gap: 18px;
+    border-radius: 40px;
+  }
+  
+  span.material-symbols-outlined {
+    font-size: 2.5rem;
+  }
+  
+  /* Service buttons - Small tablet */
+  .buttons {
+    grid-template-columns: 1fr 1fr;
+    max-width: 500px;
+    gap: 12px;
+  }
+  
+  .buttons-assist {
+    grid-template-columns: 1fr 1fr;
+    max-width: 500px;
+    gap: 12px;
+  }
+  
+  .buttons-call {
+    grid-template-columns: 1fr 1fr;
+    max-width: 500px;
+    gap: 12px;
+  }
+  
+  .buttons-visit {
+    grid-template-columns: 1fr 1fr;
+    max-width: 500px;
+    gap: 12px;
+  }
+  
+  .buttons-grocery {
+    grid-template-columns: 1fr 1fr;
+    max-width: 500px;
+    gap: 10px;
+  }
+  
+  .buttons-ride {
+    grid-template-columns: 1fr 1fr;
+    max-width: 500px;
+    gap: 12px;
+  }
+  
+  .add-btn {
+    font-size: 1.1rem;
+    min-height: 70px;
+  }
+}
+
+/* Large tablet styles (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    padding: 20px;
+    padding-top: 120px; /* Adjust for header menu */
+  }
+  
+  /* Grid layout - Large tablet (2 columns) */
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 600px;
+  }
+  
+  button.opt-button {
+    height: 140px;
+    font-size: 2.5rem;
+    padding: 0 25px;
+    gap: 20px;
+    border-radius: 40px;
+  }
+  
+  span.material-symbols-outlined {
+    font-size: 3rem;
+  }
+  
+  /* Service buttons - Large tablet */
+  .buttons {
+    grid-template-columns: 1fr 1fr;
+    max-width: 600px;
+    gap: 15px;
+  }
+  
+  .buttons-assist {
+    grid-template-columns: 1fr 1fr;
+    max-width: 600px;
+    gap: 15px;
+  }
+  
+  .buttons-call {
+    grid-template-columns: 1fr 1fr;
+    max-width: 600px;
+    gap: 15px;
+  }
+  
+  .buttons-visit {
+    grid-template-columns: 1fr 1fr;
+    max-width: 600px;
+    gap: 15px;
+  }
+  
+  .buttons-grocery {
+    grid-template-columns: 1fr 1fr;
+    max-width: 600px;
+    gap: 12px;
+  }
+  
+  .buttons-ride {
+    grid-template-columns: 1fr 1fr;
+    max-width: 600px;
+    gap: 15px;
+  }
+  
+  .add-btn {
+    font-size: 1.2rem;
+    min-height: 80px;
+  }
+  
+  /* Back button - Tablet */
+  .back-button {
+    left: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+  
+  /* Modal content - Tablet */
+  .modal-content {
+    max-width: 600px;
+  }
+  
+  /* Calendar - Tablet */
+  .calendar-cell {
+    min-height: 50px;
+    font-size: 1.1rem;
+  }
+  
+  /* Time grid - Tablet */
+  .time-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .card {
+    font-size: 1.1rem;
+    padding: 18px;
+  }
+}
+
+/* Ensure proper spacing for screens 1800px and below to prevent emergency button overlap */
+@media (max-width: 1800px) {
+  .container {
+    padding-bottom: 150px; /* Add extra bottom padding to prevent emergency button overlap */
+    padding-right: 40px; /* Reduced right padding for better centering */
+    padding-left: 40px; /* Add left padding for balance */
+    display: flex;
+    justify-content: center; /* Ensure container content is centered */
+    align-items: center;
+  }
+  
+  .grid {
+    margin-bottom: 3rem; /* At least 2rem gap above emergency button with extra space */
+    margin-left: auto;
+    margin-right: auto;
+    justify-self: center;
+    place-self: center;
+  }
+  
+  /* Ensure all button containers are centered */
+  .buttons,
+  .buttons-assist,
+  .buttons-call,
+  .buttons-visit,
+  .buttons-grocery,
+  .buttons-ride {
+    margin-left: auto;
+    margin-right: auto;
+    justify-self: center;
+    place-self: center;
+    margin-bottom: 3rem; /* At least 2rem gap above emergency button with extra space */
+    margin-top: 3rem;
+  }
+  
+  /* Adjust emergency button position for better spacing */
+  .emergency-911-btn {
+    bottom: 30px;
+    right: 30px;
+  }
+  
+  .tablet-screen .emergency-911-btn {
+    bottom: 25px;
+    right: 25px;
+  }
+}
+
+/* Ensure proper spacing and centering for desktop screens (1025px to 1919px) */
+@media (min-width: 1025px) and (max-width: 1919px) {
+  .container {
+    padding-bottom: 120px; /* Extra bottom padding to prevent emergency button overlap */
+    padding-right: 40px; /* Balanced padding for centering */
+    padding-left: 40px; /* Balanced padding for centering */
+    display: flex;
+    justify-content: center; /* Ensure container content is centered */
+    align-items: center;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr; /* 3 columns layout */
+    grid-template-rows: 1fr 1fr; /* 2 rows layout */
+    max-width: 1200px; /* Reasonable max width for 3x2 layout */
+    margin-bottom: 3rem; /* At least 2rem gap above emergency button with extra space */
+    margin-left: auto;
+    margin-right: auto;
+    justify-self: center;
+    place-self: center;
+    justify-content: center;
+    place-items: center;
+  }
+  
+  /* Ensure all button containers are centered and use 3x2 layout */
+  .buttons,
+  .buttons-assist,
+  .buttons-call,
+  .buttons-visit,
+  .buttons-grocery,
+  .buttons-ride {
+    grid-template-columns: 1fr 1fr 1fr; /* 3 columns layout for service pages */
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    justify-self: center;
+    place-self: center;
+    margin-bottom: 3rem; /* At least 2rem gap above emergency button with extra space */
+    margin-top: 3rem;
+  }
+  
+  /* Adjust emergency button position for better spacing */
+  .emergency-911-btn {
+    bottom: 30px;
+    right: 30px;
+  }
+  
+  .tablet-screen .emergency-911-btn {
+    bottom: 25px;
+    right: 25px;
+  }
+}
+
+/* Desktop styles (1025px+) */
+@media (min-width: 1025px) {  
+  /* Grid layout - Desktop (2x3) */
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 30px;
+    max-width: 800px;
+    /* height: 80vh; */
+    margin-bottom: 8rem;
+  }
+  
+  button.opt-button {
+    height: 180px;
+    font-size: 3rem;
+    border-radius: 40px;
+    padding: 0 30px;
+    gap: 25px;
+  }
+  
+  span.material-symbols-outlined {
+    font-size: 3.5rem;
+  }
+  
+  /* Service buttons - Desktop */
+  .buttons {
+    grid-template-columns: 1fr 1fr;
+    max-width: 800px;
+    gap: 2rem;
+  }
+  
+  .buttons-assist {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    max-width: 1000px;
+    gap: 2rem;
+    margin-top: -4rem;
+  }
+  
+  .buttons-call {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    max-width: 1000px;
+    gap: 2rem;
+  }
+  
+  .buttons-visit {
+    grid-template-columns: 1fr 1fr;
+    max-width: 800px;
+    gap: 2rem;
+  }
+  
+  .buttons-grocery {
+    grid-template-columns: 1fr 1fr;
+    max-width: 800px;
+    gap: 1.5rem;
+    margin-top: 6rem;
+  }
+  
+  .buttons-ride {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    max-width: 1000px;
+    gap: 2rem;
+  }
+  
+  .add-btn {
+    font-size: 2rem;
+    min-height: 100px;
+    padding: 25px;
+  }
+  
+  /* Back button - Desktop */
+  .back-button {
+    left: 30px;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+  }
+  
+  h1.service-title {
+    font-size: 1.5rem;
+    padding: 20px;
+  }
+  
+  /* Modal content - Desktop */
+  .modal-content {
+    max-width: 700px;
+    padding: 30px;
+  }
+  
+  /* Calendar - Desktop */
+  .calendar-cell {
+    min-height: 60px;
+    font-size: 1.3rem;
+  }
+  
+  /* Time grid - Desktop */
+  .time-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .time-button {
+    padding: 18px;
+    font-size: 1.1rem;
+  }
+  
+  .card {
+    font-size: 1.2rem;
+    padding: 20px;
+  }
+  
+  /* Quantity selector - Desktop */
+  .quantity-selector {
+    gap: 40px;
+    font-size: 2.5rem;
+  }
+  
+  .quantity-btn {
+    font-size: 2.5rem;
+    width: 80px;
+    height: 80px;
+  }
+}
+
+.container {
+  padding-top: 10px;
+  padding-bottom: 120px; /* Extra bottom padding to prevent emergency button overlap */
+  padding-right: 40px; /* Balanced padding for centering */
+  padding-left: 40px; /* Balanced padding for centering */
+  display: flex;
+  justify-content: center; /* Ensure container content is centered */
+  align-items: center;
+}
+  
+.grid {
+  max-width: 1200px;
+  /* grid-template-columns: 1fr 1fr 1fr; */
+  grid-template-rows: 1fr 1fr; /* Explicitly set 2 rows */
+  gap: 30px;
+  margin-bottom: 3rem; /* At least 2rem gap above emergency button with extra space */
+  margin-left: auto;
+  margin-right: auto;
+  justify-self: center;
+  place-self: center;
+}
+  
+/* Ensure all button containers are centered */
+.buttons,
+.buttons-assist,
+.buttons-call,
+.buttons-visit,
+.buttons-grocery,
+.buttons-ride {
+  max-width: 1200px;
+  grid-template-columns: 1fr 1fr;
+  margin-left: auto;
+  margin-right: auto;
+  justify-self: center;
+  place-self: center;
+  margin-bottom: 3rem; /* At least 2rem gap above emergency button with extra space */
+  margin-top: 3rem;
+}
+  
+/* Adjust emergency button position for better spacing */
+.emergency-911-btn {
+  bottom: 30px;
+  right: 30px;
+}
+  
+.tablet-screen .emergency-911-btn {
+  bottom: 25px;
+  right: 25px;
+}
+
+/* Large desktop styles (1440px+) */
+@media (min-width: 1025px) {
+  button.opt-button {
+    height: 200px;
+    font-size: 3rem;
+    padding: 0 35px;
+    gap: 30px;
+    border-radius: 70px;
+  }
+  
+  span.material-symbols-outlined {
+    font-size: 4rem;
+  }
+  
+  .buttons {
+    max-width: 1000px;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .buttons-assist {
+    max-width: 1000px;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .buttons-call {
+    max-width: 1000px;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .buttons-visit {
+    max-width: 1000px;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .buttons-grocery {
+    max-width: 1000px;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .buttons-ride {
+    max-width: 1000px;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Ultra-wide displays (1920px+) - 2x2 grid layout */
+/* @media (min-width: 1920px) {
+  .container {
+    padding-top: 10px;
+    padding-bottom: 120px; 
+    padding-right: 40px; 
+    padding-left: 40px; 
+    display: flex;
+    justify-content: center; 
+  }
+  
+  .grid {
+    max-width: 1200px;
+    grid-template-columns: 1fr 1fr 1fr; 
+    grid-template-rows: 1fr 1fr;    
+    margin-bottom: 3rem;
+    margin-left: auto;
+    margin-right: auto;
+    justify-self: center;
+    place-self: center;
+  }  
+
+  .buttons,
+  .buttons-assist,
+  .buttons-call,
+  .buttons-visit,
+  .buttons-grocery,
+  .buttons-ride {
+    max-width: 1200px;
+    grid-template-columns: 1fr 1fr;
+    margin-left: auto;
+    margin-right: auto;
+    justify-self: center;
+    place-self: center;
+    margin-bottom: 3rem; 
+  }
+  
+  .emergency-911-btn {
+    bottom: 30px;
+    right: 30px;
+  }
+  
+  .tablet-screen .emergency-911-btn {
+    bottom: 25px;
+    right: 25px;
+  }
+} */
+
+/* Landscape orientation on mobile/tablet */
+@media (orientation: landscape) and (max-height: 500px) {
+  .container {
+    padding: 5px;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    height: auto;
+  }
+  
+  button.opt-button {
+    height: 80px;
+    font-size: 2rem;
+    padding: 0 15px;
+    gap: 10px;
+    border-radius: 40px;
+  }
+  
+  span.material-symbols-outlined {
+    font-size: 2rem;
+  }
+  
+  .back-button {
+    top: 5px;
+    left: 5px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .card {
+    border: 2px solid #333;
+  }
+  
+  .calendar-cell {
+    border: 1px solid #666;
+  }
+}
+
+/* Print styles */
+@media print {
+  .back-button,
+  .modal,
+  .buttons {
+    display: none !important;
+  }
+  
+  .cards {
+    page-break-inside: avoid;
+  }
+  
+  .card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  body {
+    background: white !important;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus styles for accessibility */
+button:focus,
+.calendar-cell:focus {
+  outline: 2px solid #4a81c0; /*#1976d2;*/
+  outline-offset: 2px;
+}
+
+/* Touch-friendly sizing for interactive elements */
+@media (pointer: coarse) {
+  .calendar-cell {
+    min-height: 48px;
+  }
+  
+  .time-button {
+    min-height: 48px;
+  }
+  
+  .remove-btn {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+}
+
+/* Emergency 911 Button - Always visible and accessible */
+.emergency-911-btn {
+  position: fixed;
+  bottom: 50px;
+  right: 40px;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 20px 25px;
+  font-size: 32px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
+  z-index: 5001;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  min-width: 110px;
+  min-height: 70px;
+}
+
+.emergency-911-btn:hover {
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(220, 38, 38, 0.5);
+}
+
+.emergency-911-btn:active {
+  transform: scale(0.98);
+}
+
+.emergency-911-btn .material-icons {
+  font-size: 28px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Responsive emergency button for smaller screens */
+@media (max-width: 768px) {
+  .emergency-911-btn {
+    bottom: 15px;
+    right: 15px;
+    padding: 18px 22px;
+    font-size: 22px;
+    min-width: 100px;
+    min-height: 65px;
+  }
+  
+  .emergency-911-btn .material-icons {
+    font-size: 26px;
+  }
+}
+
+/* Emergency Modal Styles */
+.emergency-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.emergency-modal-content {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.emergency-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.emergency-icon {
+  font-size: 40px;
+  color: #dc2626;
+  animation: pulse 1.5s infinite;
+}
+
+.emergency-header h2 {
+  color: #dc2626;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.emergency-body {
+  margin-bottom: 30px;
+}
+
+.emergency-body p {
+  font-size: 20px;
+  line-height: 1.5;
+  margin: 15px 0;
+  color: #374151;
+}
+
+.emergency-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.emergency-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 25px;
+  border: none;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 160px;
+  min-height: 60px;
+  justify-content: center;
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: white;
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.confirm-btn:hover {
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+.cancel-btn {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: white;
+  box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+}
+
+.cancel-btn:hover {
+  background: linear-gradient(135deg, #4b5563, #374151);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
+}
+
+/* Emergency Follow-up Modal Specific Styles */
+.follow-up-modal {
+  max-width: 600px;
+}
+
+.calling-status {
+  text-align: center;
+}
+
+.large-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: #dc2626;
+  margin: 20px 0;
+}
+
+.manual-instructions {
+  background: #f9fafb;
+  border-radius: 15px;
+  padding: 25px;
+  margin: 25px 0;
+  border-left: 5px solid #dc2626;
+}
+
+.instruction-line {
+  font-size: 18px;
+  font-weight: 500;
+  color: #374151;
+  margin: 12px 0;
+  text-align: left;
+  padding-left: 10px;
+}
+
+.highlight-number {
+  background: #dc2626;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.help-message {
+  font-size: 22px;
+  font-weight: 700;
+  color: #059669;
+  margin-top: 25px;
+  text-align: center;
+}
+
+/* Simple Calling Modal for Seniors */
+.calling-modal {
+  max-width: 400px;
+  text-align: center;
+}
+
+.calling-animation {
+  padding: 30px 20px;
+}
+
+.phone-icon {
+  margin-bottom: 25px;
+}
+
+.phone-icon .material-icons {
+  font-size: 60px;
+  color: #dc2626;
+  animation: phoneRing 1.5s ease-in-out infinite;
+}
+
+.calling-text {
+  font-size: 32px;
+  font-weight: 700;
+  color: #dc2626;
+  margin: 20px 0 30px 0;
+  letter-spacing: 1px;
+}
+
+.loading-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 25px 0;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #dc2626;
+  animation: dotPulse 1.4s ease-in-out infinite both;
+}
+
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0s;
+}
+
+@keyframes phoneRing {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-5deg) scale(1.1);
+  }
+  75% {
+    transform: rotate(5deg) scale(1.1);
+  }
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive Emergency Modal */
+@media (max-width: 768px) {
+  .emergency-modal-content {
+    padding: 25px 20px;
+    margin: 10px;
+  }
+  
+  .emergency-header h2 {
+    font-size: 24px;
+  }
+  
+  .emergency-icon {
+    font-size: 35px;
+  }
+  
+  .emergency-body p {
+    font-size: 18px;
+  }
+  
+  .emergency-btn {
+    padding: 16px 20px;
+    font-size: 16px;
+    min-width: 140px;
+    min-height: 55px;
+  }
+  
+  .emergency-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Mobile calling modal */
+  .calling-modal {
+    max-width: 350px;
+  }
+  
+  .phone-icon .material-icons {
+    font-size: 50px;
+  }
+  
+  .calling-text {
+    font-size: 28px;
+  }
+  
+  .calling-animation {
+    padding: 25px 15px;
+  }
+}

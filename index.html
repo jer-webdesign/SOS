@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Service Panel</title>
+
+    <!-- Senior-optimized fonts for maximum readability -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Material-UI Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Android Tablet Frame -->
+    <div class="tablet-frame">
+      <div class="tablet-screen">
+        <!-- Header Menu -->
+        <header class="header-menu">
+          <div class="header-logo">
+            <img src="sosLogo.png" alt="Seniors On Support Logo" class="header-logo-image">
+          </div>
+          <h1 class="header-title">Seniors On Support</h1>
+          <div class="header-datetime" id="headerDateTime"></div>
+        </header>
+
+        <div class="container">
+          <div class="grid">
+
+            <button class="opt-button" onclick="goToService('call.html')">
+              <span class="material-icons senior-icon call-icon">phone</span>
+              Call
+            </button>
+            
+            <button class="opt-button" onclick="goToService('grocery.html')">
+              <span class="material-icons senior-icon grocery-icon">shopping_cart</span>
+              Grocery
+            </button>
+            
+            <button class="opt-button" onclick="goToService('assist.html')">
+              <span class="material-icons senior-icon assist-icon">support_agent</span>
+              Assist
+            </button>
+            
+            <button class="opt-button" onclick="goToService('chores.html')">
+              <span class="material-icons senior-icon chores-icon">cleaning_services</span>
+              Chores
+            </button>
+            
+            <button class="opt-button" onclick="goToService('visit.html')">
+              <span class="material-icons senior-icon visit-icon">people</span>
+              Visit
+            </button>
+            
+            <button class="opt-button" onclick="goToService('ride.html')">
+              <span class="material-icons senior-icon ride-icon">directions_car</span>
+              Ride
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Emergency 911 Button - Always visible -->
+        <button class="emergency-911-btn" onclick="emergency911()">
+          <span class="material-icons">local_hospital</span>
+          Emergency 911
+        </button>
+
+        <!-- Emergency Modal -->
+        <div id="emergencyModal" class="emergency-modal" style="display: none;">
+          <div class="emergency-modal-content">
+            <div class="emergency-header">
+              <span class="material-icons emergency-icon">warning</span>
+              <h2>EMERGENCY CALL</h2>
+            </div>
+            <div class="emergency-body">
+              <p>This will call 911 emergency services immediately.</p>
+              <p><strong>Are you sure you want to continue?</strong></p>
+            </div>
+            <div class="emergency-actions">
+              <button class="emergency-btn confirm-btn" onclick="confirmEmergency()">
+                <span class="material-icons">phone</span>
+                YES - CALL 911 NOW
+              </button>
+              <button class="emergency-btn cancel-btn" onclick="closeEmergencyModal()">
+                <span class="material-icons">close</span>
+                CANCEL
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Emergency Follow-up Modal -->
+        <div id="emergencyCallingModal" class="emergency-modal" style="display: none;">
+          <div class="emergency-modal-content calling-modal">
+            <div class="calling-animation">
+              <div class="phone-icon">
+                <span class="material-icons">phone_in_talk</span>
+              </div>
+              <h2 class="calling-text">Calling 911...</h2>
+              <div class="loading-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+            </div>
+            <div class="emergency-actions">
+              <button class="emergency-btn confirm-btn" onclick="closeEmergencyModal()">
+                <span class="material-icons">check</span>
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- Tablet frame elements -->
+      <div class="tablet-home-button"></div>
+      <div class="tablet-speaker tablet-speaker-top"></div>
+      <div class="tablet-speaker tablet-speaker-bottom"></div>
+      <div class="tablet-camera"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+      // Update date and time display
+      function updateDateTime() {
+        const now = new Date();
+        const options = {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        };
+        const dateTimeString = now.toLocaleDateString('en-US', options);
+        document.getElementById('headerDateTime').textContent = dateTimeString;
+      }
+
+      // Update immediately and then every minute
+      updateDateTime();
+      setInterval(updateDateTime, 60000);
+    </script>
+  </body>
+</html>
